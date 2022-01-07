@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}All categories{% endblock %}
+{% block content %}
+
+{% comment %} <div class="row"> 
+  <div class="col-md mx-sm-2" style="margin: 0 auto;">
+      <form method='post'>
+        {% csrf_token %}
+        <button id='empty_categories' type="submit" class="btn col-4 btn-primary btn-block" style="display: block;margin: 1rem auto;">Empty Categories</button>
+      </form>
+      <form method='post'>
+        {% csrf_token %}
+        <button id='popular_categories' type="submit" class="btn col-4 btn-primary btn-block" style="display: block;margin: 1rem auto;">Popular Categories</button>
+      </form>
+  </div> 
+</div>  {% endcomment %}
+
+
+<div id='foods_list' class='m-5'>
+<h3>  شعبات رستوران {{restaurant}}</h3>
+{% for branch in branch_list %}
+<div class="row">
+    <div class="col-md-10" style="margin:0 auto;">
+        <div class="card container-fluid" style="margin-top: 1rem;">
+            <div class="card-body">
+              <h5 class="card-title">{{branch.name}} {{branch.restaurant.name}}</h5> 
+              <p>{{branch.address}}</p>   
+              <a href="{% url 'restaurant_menu' branch.pk %}" class="btn btn-warning">Menu</a>
+              <a href="{% url 'branch_popular_foods' branch.pk %}" class="btn btn-warning">Popular Foods</a>
+              {% comment %} <a href="{% url 'restaurant_branchs' restaurant.id %}" class="btn btn-warning">شعبات</a> {% endcomment %}
+              {% comment %} <a href="{% url 'category_delete' food.id %}" class="btn btn-danger">Delete</a> 
+              <a href="{% url 'category_edit' food.id %}" class="btn btn-warning">Edit</a>
+              <a href="{% url 'category_details' food.id %}" class="btn btn-info">Details</a>
+              <a href="{% url 'category_tasks' food.pk %}" class="btn btn-success">Category Tasks</a> {% endcomment %}
+
+            </div>
+          </div>
+    </div>
+</div>
+{% endfor %}
+</div>
+{% endblock %}
+
+
+
+{% comment %} {% block javascript %}
+<script>
+    var CSRF_TOKEN = '{{ csrf_token }}';
+    var EMPTY_CATEGORY_URL = "{% url 'empty_categories' %}"
+    var POPULAR_CATEGORIES_URL = "{% url 'popular_categories' %}"
+</script>
+<script src={% static '/js/category.js' %}></script>
+{% endblock javascript %}  {% endcomment %}

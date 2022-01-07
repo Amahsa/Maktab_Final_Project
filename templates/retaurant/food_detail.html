@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block content %}
+  {% comment %} <h1>Delete Food</h1> {% endcomment %}
+  <div class='m-5'> 
+    {{food}}
+    {% comment %} {{food.category.name}} {% endcomment %}
+  </div>
+{% endblock content %}
+
+
+
+
+{% comment %} {% block javascript %}
+<script>
+    var CSRF_TOKEN = '{{ csrf_token }}';
+    var EMPTY_CATEGORY_URL = "{% url 'empty_categories' %}"
+    var POPULAR_CATEGORIES_URL = "{% url 'popular_categories' %}"
+</script>
+<script src={% static '/js/category.js' %}></script>
+{% endblock javascript %}  {% endcomment %}

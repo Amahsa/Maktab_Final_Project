@@ -1,0 +1,291 @@
+{% extends 'base.html' %}
+
+{% block content %}
+	{% for message in messages %}
+	<div class="container-fluid p-0">
+	<div class="alert {{ message.tags }} alert-dismissible" role="alert" >
+		<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+		<span aria-hidden="true">×</span>
+		</button>
+		{{ message }}
+	</div>
+	</div>
+	{% endfor %}
+	{% if user.is_authenticated %} 
+		
+		{% if user.is_site_admin %}
+			<div  class="col-5 mx-auto"> 
+				<div class='m-4'>
+					<h1 class = 'text-center'>Admin Panel</h1>
+				</div>		
+				<div class="row"  > 
+					<div class="col-md mx-sm-2" style="margin: 0 auto;">
+						<p><a href="{% url 'foods_list' %}" class="btn  btn-success btn-block">Foods</a></p>
+						<p><a href="{% url 'popular_foods' %}" class="btn  btn-success btn-block">Popular Foods</a></p>
+						<p><a href="{% url 'customers_list' %}" class="btn btn-success btn-block">Customers</a></p>
+						<p><a href="{% url 'restaurants_list' %}" class="btn btn-success  btn-block">Restaurants</a></p>
+						<p><a href="{% url 'popular_restarunts' %}" class="btn  btn-success  btn-block">Popular Restaurants</a></p>
+						<p><a href="{% url 'meals_list' %}" class="btn btn-success  btn-block">Meals</a></p>
+						{% comment %} <p><a href="{% url 'add_food' %}" class="btn  btn-success  btn-block">Add Food</a></p> {% endcomment %}
+						<p><a href="{% url 'category_list' %}" class="btn btn-success  btn-block">Categories</a></p>
+						{% comment %} <p><a href="{% url 'add_meal' %}" class="btn btn-success  btn-block">Add Meal</a></p> {% endcomment %}
+					</div> 
+				</div> 
+			</div> 
+		{% endif %}
+
+		{% if user.is_customer %}
+			
+				{% comment %} <h1>customer  Home page </h1> {% endcomment %}
+			{% load cart %}
+			{% load custom_filter %}
+			<!-- body -->
+			<div class="container-fluid mt-3">
+				<div class="row">
+
+<!-- filter ------------------------------------------------------------------------>
+					
+					 <div class="col-lg-3 mx-auto">
+
+						<div class="list-group mb-2">
+							<h5 class="list-group-item list-group-item-action btn-outline-success"> Categories </h5>
+
+							<a href="/" class="list-group-item list-group-item-action btn btn-outline-success">All Products</a>
+
+							{% for category in categories %}
+							<a href="/?category={{category.id}}"
+								class="list-group-item list-group-item-action btn btn-outline-success ">{{category.name}}</a>
+		
+							{% endfor %}
+							
+						</div>
+						<h5 class="list-group-item list-group-item-action btn-outline-success"> Restaurants </h5>
+						<div class="list-group ">
+							{% for branch in branchs %}
+							<a href="/?branch={{branch.id}}"
+								class="list-group-item list-group-item-action btn btn-outline-success ">{{branch.restaurant.name}} {{branch.name}}</a>
+							{% endfor %}
+						</div>
+
+					</div>  
+<!------------------------------ filter ---------------------------------------------->
+
+<!----------------------------- all products ---------------------------------------->
+					<div id='products' class="col-lg-9 mx-auto">
+						<div class="row mx-auto">
+							{% for product in products %}
+							<div class="card mx-auto mb-3" id={{product.id}} style="width: 18rem;">
+								<img class="card-img-top" src="{{product.image.url}}" alt="Card image cap">
+								<div class="card-body">
+									<p class="card-title">{{product.food.name}}</p>
+									<p class="card-text"><b>{{product.price|currency}}</b></p>
+									<!-- {{product | is_in_cart:request.session.cart }} -->
+								</div>
+
+								<div class="card-footer p-0 no-gutters">
+
+									{% if product|is_in_cart:request.session.cart %}
+									<div class="row no-gutters">
+										<form action="/#{{product.id}}" class="col-2 " method="post">
+											{% csrf_token %}
+											<input hidden type="text" name='product' value='{{product.id}}'>
+											<input hidden type="text" name='remove' value='True'>
+											<input type="submit" value=" - " class="btn btn-block btn-success border-right">
+										</form>
+										<div class="text-center col btn btn-success">{{product|cart_quantity:request.session.cart}} in Cart</div>
+										<form action="/#{{product.id}}" class="col-2 " method="post">
+											{% csrf_token %}
+											<input hidden type="text" name='product' value='{{product.id}}'>
+											<input type="submit" value=" + " class="btn btn-block btn-success border-left">
+										</form>
+									</div>
+									{% else %}
+									
+									<form action="/#{{product.id}}" method="POST" class="btn-block">
+										{% csrf_token %}
+										<input hidden type="text" name='product' value='{{product.id}}'>
+										<input type="submit" class="float-right btn btn-success form-control"
+											value="Add To Cart">
+									</form>
+									{% endif %}
+
+								</div>
+
+							</div>
+							{% endfor %}
+						</div>
+					</div>
+				</div>
+			</div> 
+
+			<div>
+				{% comment %} <h1>Popular Foods</h1> {% endcomment %}
+				{% for popular_food  in  popular_foods %}
+				<div class="card mx-auto mb-3" id={{popular_food.id}} style="width: 18rem;">
+					<img class="card-img-top" src="{{popular_food.image.url}}" alt="Card image cap">
+					<div class="card-body">
+						<p class="card-title">{{popular_food.food.name}}</p>
+						<p class="card-text"><b>{{popular_food.price|currency}}</b></p>
+						<!-- {{product | is_in_cart:request.session.cart }} -->
+					</div>
+
+					<div class="card-footer p-0 no-gutters">
+
+						{% if popular_food|is_in_cart:request.session.cart %}
+						<div class="row no-gutters">
+							<form action="/#{{popular_food.id}}" class="col-2 " method="post">
+								{% csrf_token %}
+								<input hidden type="text" name='product' value='{{product.id}}'>
+								<input hidden type="text" name='remove' value='True'>
+								<input type="submit" value=" - " class="btn btn-block btn-success border-right">
+							</form>
+							<div class="text-center col btn btn-success">{{popular_food|cart_quantity:request.session.cart}} in Cart</div>
+							<form action="/#{{popular_food.id}}" class="col-2 " method="post">
+								{% csrf_token %}
+								<input hidden type="text" name='product' value='{{product.id}}'>
+								<input type="submit" value=" + " class="btn btn-block btn-success border-left">
+							</form>
+						</div>
+						{% else %}
+						<form action="/#{{popular_food.id}}" method="POST" class="btn-block">
+							{% csrf_token %}
+							<input hidden type="text" name='product' value='{{product.id}}'>
+							<input type="submit" class="float-right btn btn-success form-control"
+								value="Add To Cart">
+						</form>
+						{% endif %}
+
+					</div>
+
+				</div>
+				{% endfor %}
+			</div>
+			
+        {% endif %}
+
+		{% if user.is_restaurant_manager %}
+			<div class='m-5'>
+				<h1>Manager  Home page </h1>
+			</div>
+        {% endif %}
+
+		{% else %}
+		
+			{% load cart %}
+			{% load custom_filter %}
+			<!-- body -->
+			<div class="container-fluid mt-3">
+				<div class="row">
+
+					<!-- filter -->
+					<div class="col-lg-3 mx-auto">
+						<div class="list-group">
+
+							<a href="/" class="list-group-item list-group-item-action btn btn-outline-success">All Products</a>
+
+							{% for category in categories %}
+							<a href="/?category={{category.id}}"
+								class="list-group-item list-group-item-action btn btn-outline-success ">{{category.name}}</a>
+							{% endfor %}
+						</div>
+					</div>
+
+					<!-- all products -->
+					<div id='products' class="col-lg-9 mx-auto">
+						<div class="row mx-auto">
+							{% for product in products %}
+							<div class="card mx-auto mb-3" id={{product.id}} style="width: 18rem;">
+								<img class="card-img-top" src="{{product.image.url}}" alt="Card image cap">
+								<div class="card-body">
+									<p class="card-title">{{product.food.name}}</p>
+									<p class="card-text"><b>{{product.price|currency}}</b></p>
+									<!-- {{product | is_in_cart:request.session.cart }} -->
+								</div>
+
+								<div class="card-footer p-0 no-gutters">
+
+									{% if product|is_in_cart:request.session.cart %}
+									<div class="row no-gutters">
+										<form action="/#{{product.id}}" class="col-2 " method="post">
+											{% csrf_token %}
+											<input hidden type="text" name='product' value='{{product.id}}'>
+											<input hidden type="text" name='remove' value='True'>
+											<input type="submit" value=" - " class="btn btn-block btn-success border-right">
+										</form>
+										<div class="text-center col btn btn-success">{{product|cart_quantity:request.session.cart}} in Cart</div>
+										<form action="/#{{product.id}}" class="col-2 " method="post">
+											{% csrf_token %}
+											<input hidden type="text" name='product' value='{{product.id}}'>
+											<input type="submit" value=" + " class="btn btn-block btn-success border-left">
+										</form>
+									</div>
+									{% else %}
+									<form action="/#{{product.id}}" method="POST" class="btn-block">
+										{% csrf_token %}
+										<input hidden type="text" name='product' value='{{product.id}}'>
+										<input type="submit" class="float-right btn btn-success form-control"
+											value="Add To Cart">
+									</form>
+									{% endif %}
+
+								</div>
+
+							</div>
+							{% endfor %}
+						</div>
+					</div>
+				</div>
+			</div> 
+
+
+
+			<div>
+				{% comment %} <h1>Popular Foods</h1>k {% endcomment %}
+				{% for popular_food  in  popular_foods %}
+				<div class="card mx-auto mb-3" id={{popular_food.id}} style="width: 18rem;">
+					<img class="card-img-top" src="{{popular_food.image.url}}" alt="Card image cap">
+					<div class="card-body">
+						<p class="card-title">{{popular_food.food.name}}</p>
+						<p class="card-text"><b>{{popular_food.price|currency}}</b></p>
+						<!-- {{product | is_in_cart:request.session.cart }} -->
+					</div>
+
+					<div class="card-footer p-0 no-gutters">
+
+						{% if popular_food|is_in_cart:request.session.cart %}
+						<div class="row no-gutters">
+							<form action="/#{{popular_food.id}}" class="col-2 " method="post">
+								{% csrf_token %}
+								<input hidden type="text" name='product' value='{{product.id}}'>
+								<input hidden type="text" name='remove' value='True'>
+								<input type="submit" value=" - " class="btn btn-block btn-success border-right">
+							</form>
+							<div class="text-center col btn btn-success">{{popular_food|cart_quantity:request.session.cart}} in Cart</div>
+							<form action="/#{{popular_food.id}}" class="col-2 " method="post">
+								{% csrf_token %}
+								<input hidden type="text" name='product' value='{{product.id}}'>
+								<input type="submit" value=" + " class="btn btn-block btn-success border-left">
+							</form>
+						</div>
+						{% else %}
+						<form action="/#{{popular_food.id}}" method="POST" class="btn-block">
+							{% csrf_token %}
+							<input hidden type="text" name='product' value='{{product.id}}'>
+							<input type="submit" class="float-right btn btn-success form-control"
+								value="Add To Cart">
+						</form>
+						{% endif %}
+
+					</div>
+
+				</div>
+				{% endfor %}
+			</div>
+
+
+
+	{% endif %} 
+	
+
+
+{% endblock %}

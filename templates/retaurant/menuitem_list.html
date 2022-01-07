@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}All categories{% endblock %}
+{% block content %}
+
+<div class="row"> 
+  <div class="col-md mx-sm-2" style="margin: 0 auto;">
+      <form method='post'>
+        {% csrf_token %}
+        <button id='empty_categories' type="submit" class="btn col-4 btn-primary btn-block" style="display: block;margin: 1rem auto;">Empty Categories</button>
+      </form>
+      <form method='post'>
+        {% csrf_token %}
+        <button id='popular_categories' type="submit" class="btn col-4 btn-primary btn-block" style="display: block;margin: 1rem auto;">Popular Categories</button>
+      </form>
+  </div> 
+</div> 
+<a href="{% url 'add_food' %}" class="btn btn-warning">افزودن غذا </a>
+<a href="{% url 'add_category' %}" class="btn btn-warning">افزودن دسته بندی</a>
+<a href="{% url 'add_meal' %}" class="btn btn-warning">افزودن وعده غذایی</a>
+
+<div id='foods_list'>
+<h3> all Foods </h3>
+{% for food in menuitem_list %}
+<div class="row">
+    <div class="col-md-10" style="margin:0 auto;">
+        <div class="card container-fluid" style="margin-top: 1rem;">
+            <div class="card-body">
+              {% comment %} <img src="{% static food.image.url %}" /> {% endcomment %}
+              
+              {% comment %} {{food.image.url}} {% endcomment %}
+              <h5 class="card-title">{{food.food.name}}</h5> 
+              <img src="{{food.image.url}}" height="100" alt='XXXXX'>            
+              
+              {% comment %} <a href="{% url 'category_delete' food.id %}" class="btn btn-danger">Delete</a> 
+              <a href="{% url 'category_edit' food.id %}" class="btn btn-warning">Edit</a>
+              <a href="{% url 'category_details' food.id %}" class="btn btn-info">Details</a>
+              <a href="{% url 'category_tasks' food.pk %}" class="btn btn-success">Category Tasks</a> {% endcomment %}
+
+            </div>
+          </div>
+    </div>
+</div>
+{% endfor %}
+</div>
+{% endblock %}
+
+
+
+{% comment %} {% block javascript %}
+<script>
+    var CSRF_TOKEN = '{{ csrf_token }}';
+    var EMPTY_CATEGORY_URL = "{% url 'empty_categories' %}"
+    var POPULAR_CATEGORIES_URL = "{% url 'popular_categories' %}"
+</script>
+<script src={% static '/js/category.js' %}></script>
+{% endblock javascript %}  {% endcomment %}
