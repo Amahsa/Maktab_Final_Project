@@ -1,0 +1,89 @@
+{% extends 'base.html' %} 
+{% load static %}
+{% block title %}Home{% endblock title %} 
+
+{% block content %} 
+Homeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
+
+    
+    {% if user.is_authenticated %} 
+    
+        {% if user.is_site_admin %}
+        <div class="mx-auto"> 
+            <div class='m-5'>
+                <h1>صفحه ی ادمین سایت</h1>
+            </div>
+        
+    {% comment %} 
+        <button type="button" class="btn btn-primary btn-lg btn-block">Foods</button>
+        <button type="button" class="btn btn-primary btn-lg btn-block">Customers</button>
+        <button type="button" class="btn btn-primary btn-lg btn-block">Restaurants</button>
+        <a class="button"  >Add Problem</a>
+
+
+        <a  class="btn btn-danger btn-lg btn-block">Delete</a> 
+        <a  class="btn btn-warning btn-lg btn-block">Edit</a>
+        <a  class="btn btn-info btn-lg btn-block">Details</a> {% endcomment %}
+            <div class="row mx-auto"  > 
+                <div class="col-md mx-sm-2" style="margin: 0 auto;">
+                    <p><a href="{% url 'foods_list' %}" class="btn col-4 btn-success btn-block">غذا ها</a></p>
+                    <p><a href="{% url 'customers_list' %}" class="btn col-4 btn-success btn-block">مشتریان</a></p>
+                    <p><a href="{% url 'restaurants_list' %}" class="btn col-4 btn-success  btn-block">رستوران ها</a></p>
+                    <p><a href="{% url 'add_food' %}" class="btn col-4  btn-success  btn-block">افزودن غذا </a></p>
+                    <p><a href="{% url 'add_category' %}" class="btn col-4  btn-success  btn-block">افزودن دسته بندی</a></p>
+                    <p><a href="{% url 'add_meal' %}" class="btn col-4 btn-success  btn-block">افزودن وعده غذایی</a></p>
+                    
+
+                    
+                </div> 
+            </div> 
+
+
+        {% comment %} <div class='m-5'>
+            <p><a href="{% url 'foods_list' %}" class="btn btn-success btn-lg btn-block">غذا ها</a></p>
+            <p><a href="{% url 'customers_list' %}" class="btn btn-success btn-lg btn-block">مشتریان</a></p>
+            <p><a href="{% url 'restaurants_list' %}" class="btn btn-success btn-lg btn-block">رستوران ها</a></p>
+            <p> <a href="{% url 'add_food' %}" class="btn btn-success btn-lg btn-block">افزودن غذا </a></p>
+            <p> <a href="{% url 'add_category' %}" class="btn btn-success btn-lg btn-block">افزودن دسته بندی</a></p>
+            <p> <a href="{% url 'add_meal' %}" class="btn btn-success btn-lg btn-block">افزودن وعده غذایی</a></p>
+        </div> {% endcomment %}
+        </div> 
+        {% endif %}
+
+        {% comment %} #------------------------------------------------------------------- {% endcomment %}
+
+        {% if user.is_customer %}
+        <div class='m-5'>
+            <h1>customer  Home page </h1>
+        </div>
+        {% endif %}
+
+        {% comment %} #------------------------------------------------------------------- {% endcomment %}
+        {% if user.is_restaurant_manager %}
+        <div class='m-5'>
+            <h1>Manager  Home page </h1>
+        </div>
+        {% endif %}
+        {% comment %} #------------------------------------------------------------------- {% endcomment %}
+        {% comment %} <h1> Home page </h1>
+        {{ user.is_site_admin }}
+        {{ user.username }} {% endcomment %}
+        {% comment %} <h1> you are logged in : Hi {{ user.username }}! </h1> {% endcomment %}
+            {% comment %} Hi {{ user.username }}!  You are {{ user.age }} years old.  {% endcomment %}
+            
+
+
+        <div class='m-2'>
+            <p><a class="btn btn-danger btn-lg btn-block" href="{% url 'account_logout' %}">خروج</a></p>
+        </div>
+        {% else %}
+        {% comment %} {{ user }} {% endcomment %}
+        <p>You are not logged in, Bye</p>
+
+
+
+        <a href="{% url 'account_login' %}">Log In</a> |
+        <a href="{% url 'account_signup' %}">Sign Up</a> 
+
+    {% endif %} 
+{% endblock content %}

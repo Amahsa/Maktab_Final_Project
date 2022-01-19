@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}All Foods{% endblock %}
+{% block content %}
+
+<div class='m-5'>
+  <a href="{% url 'add_food' %}" class="button-170">Add Food</a>
+  <a href="{% url 'add_category' %}" class="button-170">Add Category</a>
+  <a href="{% url 'add_meal' %}" class="button-170">Add Meal</a>
+</div>
+<div id='foods_list' class='m-5'>
+<h3 class='text-center'> All Foods </h3>
+
+
+<table class="table">
+  <thead class='mb-2'>
+      <tr>
+          <th>Name</th>
+          <th>Category</th>
+          <th>Meal</th>
+          <th></th>
+          
+          
+      </tr>
+  </thead>
+  <tbody>
+      
+    {% for food in food_list %}
+      <tr>
+          <td>{{food.name}}</td>
+          <td>
+            <apan>
+              {% for meal in  food.meal.values_list %} 
+              {{meal.1}}  <br>
+              {%endfor%}
+              
+            </apan>
+          </td>
+          <td>
+            <span>
+              {% for category in  food.category.values_list %} 
+              {{category.1}}  <br>
+              {%endfor%}
+            </apan>
+          </td>
+          <td>
+            <a href="{% url 'food_detail' food.id %}" class=" m-1">
+              <i class="fa fa-info-circle" aria-hidden="true" style="font-size:18px; color:gray;"></i>
+            </a>       
+          
+            <a href="{% url 'food_edit' food.id %}" >
+              <i class="fa fa-edit m-1" style="color:gray; font-size:18px"></i>
+            </a>
+          
+             <a href="{% url 'delete_food' food.id %}" class=" m-1">
+              <i class="fa fa-trash" aria-hidden="true" style="color:gray; font-size:18px"></i>
+             </a>
+          </td>
+          
+      </tr>
+
+      {% endfor %}
+     
+  </tbody>
+  
+</table>
+
+
+</div>
+{% endblock %}

@@ -1,0 +1,186 @@
+{% extends 'base.html' %}
+{%  load static %}
+{% block content %}
+{% load crispy_forms_tags %}
+
+
+
+<div id='personal_info' class='m-5'>
+<p>Personal Info</p>
+<table class="table" id='cart_item_table'>
+    <thead class='mb-2'>
+        <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Phone Number</th>
+            <th>Email</th>
+
+            <th></th>
+
+        </tr>
+    </thead>
+    <tbody>
+
+        <tr>
+            <td>{{customer.first_name}}</td>
+            <td>{{customer.last_name}}</td>
+            <td>{{customer.phone_number}}</td>
+            <td>{{customer.email}}</td>
+            
+            
+            <td>   
+              <a href={% url 'customer_update_form' customer.pk %}> 
+              <i class="fa fa-edit" 
+                style="color:gray; font-size:18px">
+              </i> 
+             </a>
+            </td>
+
+        </tr>
+ 
+    </tbody>
+
+</table>
+</div>
+
+
+
+
+
+
+
+<div id='address_list' class='m-5'>
+    <p>Addresses</p>
+    <table class="table" id='cart_item_table'>
+        <thead class='mb-2'>
+            <tr>
+                <th>Sno.</th>
+                <th>State</th>
+                <th>City</th>
+                <th>Full Address</th>
+    
+                <th></th>
+                <th></th>
+    
+            </tr>
+        </thead>
+        <tbody>
+            {% for address  in address_list %}
+            {% comment %} <form method='POST' action = {% url 'customer_address_update_form'%} > {% endcomment %}
+                <tr>
+                    <td>{{forloop.counter}}</td>
+                    <td>{{address.state}}</td>
+                    <td>{{address.city}}</td>
+                    <td>{{address.full_address}}</td>
+                    
+                    <td>  
+                    <input type="hidden" name="pk" value="{{ address.pk }}"> 
+                    <a href={% url 'customer_address_update_form' address.pk %}> 
+                    <i class="fa fa-edit" 
+                        style="color:gray; font-size:18px">
+                    </i> 
+                    </a>
+                    </td>
+
+                    <td>
+                        <a href='/' class='delete-address mt-4'
+                            data-item="{{address.id}}" data-customer-id="{{values.id}}">
+                            <i class="fa fa-trash" style="color:gray; font-size:18px"
+                                aria-hidden="true" >
+                             </i>
+                        </a>
+                        
+
+
+                    </td>
+        
+                </tr>
+            {% comment %} </from> {% endcomment %}
+            
+            
+            {% endfor %}
+            
+     
+        </tbody>
+    
+    </table>
+    </div>
+
+    
+
+    <div class=' m-5'>
+        <hr>
+        <p>Add new Address</p>
+        <div class=' d-flex justify-content-center'>
+           
+            <form id="add_neww" method="post" class='col-lg-4'>
+                {% csrf_token %}
+                {{ form|crispy }}
+                <div class = "col text-center">
+                    <input type="submit" class="btn button-170" 
+                    style="color:gray; font-size:36px" value="+" />
+                </div>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}
+
+
+
+{% block javascript %}
+<script>
+  console.log('pppppppppppppppppppppppppppp')
+  $(document).ready(function () {
+      $("#add_neww").submit(function (e) {
+          e.preventDefault();
+          // serialize the data for sending the form data.
+          var serializedData = $(this).serialize();
+          console.log(serializedData)
+          console.log('sssssssss',serializedData)
+          // make POST ajax call
+          $.ajax({
+              type: 'POST',
+              url: "{% url 'post_address' %}",
+              data: serializedData,
+              success: function (response) {
+                  $("#add_new").trigger('reset');
+                  $('#address_list').html(response.data)
+
+              },
+              error: function (response) {
+                  alert(response["responseJSON"]["error"]);
+              }
+          })
+      })
+
+
+
+      $(".delete-address").click(function (e) {
+          console.log(34343434343434)
+        e.preventDefault();
+        console.log(111)
+        var _Aid = $(this).attr('data-item');
+        var _Cid = $(this).data('customer-id');
+        console.log( _Aid)
+        $.ajax({
+          
+          url: "{% url 'delete_address' %}",
+          data: {'pk':_Aid , 'customer_id': _Cid},
+          dataType:'json',
+          success: function (response) {
+              $('#address_list').html(response.data)
+
+          },
+          error: function (response) {
+              alert(response["responseJSON"]["error"]);
+          }
+      })
+
+      
+    })  
+     
+  })
+</script>
+{% endblock javascript %}
+

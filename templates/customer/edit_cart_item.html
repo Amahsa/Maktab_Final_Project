@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load cart %}
+
+
+{% comment %} Show in  Cart  Page For Edit Cart Items{% endcomment %}
+
+  <div class='m-5 row'>
+    <div class='col'>
+      <img src="{{menuitem.image.url}}" height="400" alt={{menuitem.food.name}}> 
+    </div> 
+    <div class='col'>
+      <p>{{menuitem.food.name}}</p>
+      <div>
+        {{menuitem.branch.restaurant.name}}
+        {{menuitem.branch.name}}
+        
+      </div><br>
+      <div>
+        {{menuitem.price}} $
+        
+      </div><br>
+      <div>
+        {{menuitem.description}}
+      </div>
+      <hr>
+    
+        <form action="/#{{menuitem.id}}" method="POST" class="btn-block">
+          {% csrf_token %}
+          <div class='m-5 row '>
+            
+              <div class='col'>
+
+                <input type='number'  name='quantity'  min="0" max={{menuitem.count}}
+                value={{request.session.cart|keyvalue:menuitem.id}}> 
+                
+                <small>max order: {{menuitem.count}}</small>
+                
+              </div>
+
+              <div class='col'>
+                <input hidden type="text" name='product' value='{{menuitem.id}}'>
+                <input type="hidden" name='cart' value='True'>
+                <input type="submit" class="col-md-2 float-right btn button-18 form-control"
+                value="Edit"> 
+            </div>  
+          </div> 
+       </form>
+       
+      </div>
+         
+  </div>
+
+
+{% endblock content %} 
+

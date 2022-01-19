@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}All meals{% endblock %}
+{% block content %}
+
+<a href="{% url 'add_meal' %}" class="btn button-170 mt-5 mx-5">Add Meal</a> 
+<div id='foods_list' class='m-5'>
+  <h3> All Meals </h3>
+
+  <table class="table">
+    <thead class='mb-2'>
+        <tr>
+            <th>Name</th>
+            <th></th>       
+            <th></th>       
+            <th></th>        
+        </tr>
+    </thead>
+    <tbody>
+      {% for meal in meal_list %}
+        <tr>
+            <td>{{meal.name}}</td>
+            <td>
+              <a href="{% url 'meal_edit' meal.pk %}" >
+              <i class="fa fa-edit" style="color:gray; font-size:24px"></i>
+            </td>
+            <td>
+              <a href="{% url 'delete_meal' meal.id %}" >
+                <i class="fa fa-trash" aria-hidden="true" style="color:gray; font-size:18px"></i>
+              </a>
+
+            </td>     
+        </tr>
+        {% endfor %}
+      
+    </tbody>
+  
+  </table>
+
+</div>
+{% endblock %}

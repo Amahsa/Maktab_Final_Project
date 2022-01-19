@@ -1,0 +1,189 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% block content %}
+{% load cart %}
+{% load custom_filter %}
+
+<!-- filter ------------------------------------------------------------------------>
+        
+            
+
+<div class="container">
+   <div class="row">
+    <div class="col-lg-2 mx-auto">
+        <fieldset class="form-group">
+            <div class="row mt-4">
+              <p>Status</p>
+              <div class="col-sm-10">
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios1" value="all_orders" checked>
+                    <label class="form-check-label" for="gridRadios1">
+                      ordered
+                    </label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios2" value="ordered">
+                    <label class="form-check-label" for="gridRadios2">
+                      sent
+                    </label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios3" value="ordered">
+                  <label class="form-check-label" for="gridRadios2">
+                    delivered
+                  </label>
+              </div>
+              </div>
+            </div>
+          </fieldset>
+    </div>
+    <div id='orders' class="col-lg-10 mx-auto border rounded p-4 m-3 ">
+        <p>Your Orders</p>
+        <hr>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Sno.</th>
+                    {% comment %} <th>Image</th> {% endcomment %}   
+                    <th>Date</th> 
+                    <th>Address</th>  
+                    <th>Total Price</th>
+                    <th>Status</th>
+                    <th>Info</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+                {% for order in order_list %}
+                <tr>
+                    <td>{{forloop.counter}}</td>
+                    
+                    <td>{{order.created_at_jalali.date}} {{order.created_at_jalali.time}}</td>
+                    <td>{{order.address}}</td>
+                    <td>{{order.total_price|currency}}</td>
+                     <td>
+                            <small >{{order.status.status}}</small>
+  
+                    </td>
+                    <td>
+                        <a href="{% url 'customer_order_items' order.pk %}" class=" m-1">
+                            <i class="fa fa-info-circle" aria-hidden="true" style="font-size:18px; color:gray;"></i>
+                        </a>  
+                    </td>
+                </tr>
+                
+                {% endfor %}
+               
+            </tbody>
+
+        </table>
+    </div>
+       
+   </div>
+</div>
+
+
+{% endblock %}
+{% block javascript %}
+
+<script>
+  $(document).ready(function () {
+      $("#gridRadios1").click(function (e) {
+         
+          $.ajax({
+              url: "{% url 'customer_ordered_orders' %}",
+              data: 1 ,
+              success: function (response) {
+                  $('#orders').html(response.data)
+
+              },
+              error: function (response) {
+                  alert(response["responseJSON"]["error"]);
+              }
+          })
+      })
+      
+      $("#gridRadios2").click(function (e) {
+        
+        $.ajax({
+            url: "{% url 'customer_sent_orders' %}",
+            data: 1 ,
+            success: function (response) {
+                $('#orders').html(response.data)
+
+            },
+            error: function (response) {
+                alert(response["responseJSON"]["error"]);
+            }
+        })
+    }) 
+
+    $("#gridRadios3").click(function (e) {
+        
+      $.ajax({
+          url: "{% url 'customer_delivered_orders' %}",
+          data: 1 ,
+          success: function (response) {
+              $('#orders').html(response.data)
+
+          },
+          error: function (response) {
+              alert(response["responseJSON"]["error"]);
+          }
+      })
+  }) 
+
+
+
+	  $("#user-input").keyup(function () {
+		console.log(111);
+		var q = $(this).val();
+		console.log(q)
+		$.ajax({
+		  
+		  url: "{% url 'search' %}",
+
+		  data: {'q':q},
+
+		  dataType:'json',
+
+		  success: function (response) {
+			  $('#result').html(response.data)
+
+		  },
+		  error: function (response) {
+			  alert(response["responseJSON"]["error"]);
+		  }
+	  })  
+	  
+	})  
+
+	$(".category").click(function (e) {
+		e.preventDefault();
+		console.log(113333311)
+		var _Cid = $(this).attr('data-item');
+		console.log( _Cid)
+		$.ajax({
+		  
+		  url: "{% url 'category_foods' %}",
+		  data: {'category_id':_Cid},
+		  dataType:'json',
+		  success: function (response) {
+			  $('#products').html(response.data)				       
+
+		  },
+		  error: function (response) {
+			  alert(response["responseJSON"]["error"]);
+		  }
+	  })
+
+	  
+	}) 
+
+	})
+		
+	
+
+</script>
+{% endblock javascript %} 

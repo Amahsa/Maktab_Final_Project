@@ -3,11 +3,8 @@
 
 {% block content %}
 
-<div class="container mt-4">
-    
-    <div class="p-3 m-3">
-
-        
+<div class="container mt-4">   
+    <div class="p-3 m-3">   
         <div class="col-lg-5 rounded mx-auto border pt-4">
             <div class="text-center col">
             
@@ -19,6 +16,14 @@
             <hr>
             </div>
             <h3 class="alert alert-success rounded-pill" style="text-align:center">Create an Account</h3>
+            <div>
+                <small>
+                    Are you a Restaurant Manager?
+                    <a class="nav-link"href="{% url 'signup_manager' %}"> Register your first restaurnt</a>
+                    <a class="nav-link"href="{% url 'signup_manager_new_branch' %}"> Register another Restaurant Branch</a>
+                </small>
+            </div>
+            <br>
             <form action="/signup" method="POST">
                 
                 {% csrf_token %}
@@ -95,12 +100,12 @@
                 </div>
 
                 <!--Checkme button-->
-                <div class="mb-3 form-check">
+                {% comment %} <div class="mb-3 form-check">
                     <input type="checkbox" class="form-check-input" id="exampleCheck1">
                     <label class="form-check-label d-grid gap-2" for="exampleCheck1">Check me out</label>
-                </div>
+                </div> {% endcomment %}
                 <hr>
-                <button type="submit" class="btn btn-sm btn-success col-lg-12">Create an account</button>
+                <button type="submit" class="p-3 btn btn-sm btn-success col-lg-12">Create an account</button>
 
             </form>
         </div>

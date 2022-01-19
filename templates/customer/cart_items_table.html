@@ -1,0 +1,115 @@
+{% load crispy_forms_tags %}
+{% load cart %}
+{% load custom_filter %}
+{% comment %} <table class="table" id='cart_item_table'> {% endcomment %}
+<thead class='mb-2'>
+    <tr>
+        <th>Sno.</th>
+        <th>Image</th>
+        <th>Product</th>
+        <th>Price</th>
+        <th>Quantity</th>
+        <th>Total</th>
+        <th></th>
+        <th></th>
+    </tr>
+</thead>
+<tbody>
+    
+    {% for product in products %}
+    <tr>
+        <td>{{forloop.counter}}</td>
+        <td><img style="height: 80px;" class="rounded-circle" src="{{product.image.url}}" alt=""></td>
+        <td>{{product.food.name}}</td>
+        <td>{{product.price|currency}}</td>
+        <td>{{product|cart_quantity:request.session.cart}}</td>
+        <td>{{product|price_total:request.session.cart|currency}}</td>
+        
+        <td>   
+            <a href="{% url 'edit_cart_item' product.id %}"> 
+            <i class="fa fa-edit" 
+            style="color:gray; font-size:18px">
+            </i> 
+            </a>
+        </td>
+
+
+
+        <td>
+            <a  href='/' class='delete-item'
+            data-item="{{product.id}}">
+            <i class="fa fa-trash" style="color:gray; font-size:18px" aria-hidden="true" ></i></a>
+
+            </button>
+        </td>
+
+        <p id="values"></p>
+
+    </tr>
+
+    {% endfor %}
+    
+</tbody>
+
+<tfoot>
+    <tr>
+        <th colspan="4"></th>
+        <th class="" colspan="">Total</th>
+        <th>{{products|total_cart_price:request.session.cart|currency}}</th>
+        
+        </tr>
+</tfoot>
+
+{% block javascript %}
+<script>
+  console.log('adding new address')
+  $(document).ready(function () {
+      $("#add_new").submit(function (e) {
+        $('#AddAddressModal').modal().hide();
+          e.preventDefault();
+          var serializedData = $(this).serialize();
+          console.log('sssssssss',serializedData)
+          $.ajax({
+              type: 'POST',
+              url: "{% url 'check_out_post_address' %}",
+              data: serializedData,
+              success: function (response) {
+                  $('#AddAddressModal').modal().hide();
+                  $("#add_new").trigger('reset');
+                  $('#AddAddressModal').modal('hide');
+                  $('#address_list').html(response.data)
+
+              },
+              error: function (response) {
+                  alert(response["responseJSON"]["error"]);
+              }
+          })
+      })
+      
+      $(".delete-item").click(function (e) {
+          e.preventDefault();
+          console.log(113333311)
+          var _Pid = $(this).attr('data-item');
+          console.log( _Pid)
+          $.ajax({
+            
+            url: "{% url 'delete_cart_item' %}",
+            data: {'pk':_Pid},
+            dataType:'json',
+            success: function (response) {
+                $('#cart_item_table').html(response.data)
+                console.log(response.data2)
+				        $('#cart_len').html(response.data2)
+
+
+            },
+            error: function (response) {
+                alert(response["responseJSON"]["error"]);
+            }
+        })
+
+        
+      })  
+  })
+</script>
+{% endblock javascript %}

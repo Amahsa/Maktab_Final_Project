@@ -1,0 +1,9 @@
+<label for="">Address</label>
+<select name="address_id" class="form-control" aria-describedby="helpId">
+    {% for address in address_list %}
+        <option value="{{ address.id }}">
+        {{ address.state }}  {{ address.city }}  {{ address.full_address }}
+      </option>
+    {% endfor %}
+</select>
+

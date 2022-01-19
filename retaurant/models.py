@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import manager
 from django.db.models.base import Model
 from django.db.models.enums import Choices
 from django.dispatch import receiver
@@ -40,7 +41,7 @@ class Branch(models.Model):
     registered_at=models.DateTimeField(auto_now_add=True)
     category = models.ForeignKey(Category,on_delete=models.CASCADE,related_name= 'category_branchs')
     restaurant = models.ForeignKey(Restaurant,on_delete=models.CASCADE , related_name='branchs')
-    manager = models.ForeignKey(Manager,on_delete=models.CASCADE)
+    manager = models.ForeignKey(Manager,on_delete=models.CASCADE,related_name='manager_branch')
 
 
     def __str__(self):
@@ -53,6 +54,10 @@ class Branch(models.Model):
     @staticmethod
     def get_all_branches():
         return Branch.objects.all()
+    
+    @staticmethod
+    def get_branche_by_manager_email(email):
+        return Branch.objects.get(manager=Manager.objects.get(email=email))
 
     @staticmethod
     def get_branches_by_category(category_id):
@@ -94,10 +99,8 @@ class MenuItem(models.Model):
     @staticmethod
     def get_all_products_by_categoryid(category_id):
         if category_id:
-            return MenuItem.objects.filter(food__category=category_id) # test
-            print(888888888)
-        else:
-            print(55555555)
+            return MenuItem.objects.filter(food__category=category_id) # test 
+        else: 
             return MenuItem.get_all_products();
 
     @staticmethod
@@ -160,12 +163,18 @@ class Order(models.Model):
         jalali_date = jdatetime.datetime.fromgregorian(datetime=self.created_at)
         return jalali_date
     
+    
     def placeOrder(self):
         self.save()
 
     @staticmethod
     def get_orders_by_customer(costumer_id):
         return Order.objects.filter(costumer=costumer_id).order_by('-created_at')
+    
+    # @staticmethod
+    # def get_orders_branch(costumer_id):
+    #     return Order.objects.filter(costumer=costumer_id).order_by('-created_at')
+
 
 class Status(models.Model): # ***********
     status = models.CharField(max_length=200)
@@ -190,3 +199,7 @@ class OrderItem(models.Model):
     
     def __str__(self):
             return f'سفارش  : {self.order.id}'
+
+    @staticmethod
+    def get_order_items_by_order_id(order_id):
+        return OrderItem.objects.filter(order=order_id)

@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load cart %}
+  
+
+  <form action="" method="post">{% csrf_token %}
+    <div class='m-5 row'>
+    
+    <div class='col'>
+        {% if menuitem.image %}
+        <img src="{{menuitem.image.url}}" height="300" alt={{menuitem.food.name}}> 
+        {% endif %}
+    </div> 
+
+
+    <div class='col'>
+      
+            <div>
+              <p>{{menuitem.food.name}}</P>
+            </div>
+
+
+            <div>
+              <p>{{menuitem.description}}</P>
+            </div>
+
+
+            <div>
+              <p> {{menuitem.price}}</P>
+            </div>
+
+
+            <hr>
+
+
+            <p>Are you sure you want to delete this Food from your Menu"?</p>
+            <input type="submit" value="Confirm">
+          
+
+    </div>
+      
+  
+    
+</div>
+</form> 
+
+{% endblock content %} 
+

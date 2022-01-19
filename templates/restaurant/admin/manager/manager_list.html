@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}All Managers{% endblock %}
+{% block content %}
+
+<div id='customer_list' class='m-5'>
+<h3 class='text-center mb-5' > All Managers </h3>
+
+
+<table class="table">
+  <thead class='mb-2'>
+      <tr>
+          <th>Sno.</th>
+          <th>First Name</th>
+          <th>Last Name</th>
+          <th>Email</th>
+          <th>Branch</th>
+          <th></th>
+          <th></th>
+          <th></th>
+          
+          
+      </tr>
+  </thead>
+  <tbody>
+      
+    {% for manager in manager_list %}
+      <tr>
+          <td>{{forloop.counter}}</td>
+          <td>{{manager.first_name}}</td>
+          <td>{{manager.last_name}}</td>
+          <td>{{manager.email}}</td>
+
+          <td>
+            <span>
+              {% for branch in manager.manager_branch.all %}
+              {{branch}} 
+              {% endfor %}
+
+            </span>
+          </td>
+          <td>
+            
+            <a href="{% url 'manager_edit' manager.id %}" class=" m-1">
+              <i class="fa fa-edit" aria-hidden="true" style="color:gray; font-size:18px"></i>
+             </a>  
+          </td>
+          <td>       
+            <a href="{% url 'delete_manager' manager.id %}" >
+              <i class="fa fa-trash" aria-hidden="true" style="color:gray; font-size:18px"></i>
+          </td>
+          
+      </tr>
+
+      {% endfor %}
+     
+  </tbody>
+ 
+</table>
+
+
+</div>
+{% endblock %}
+

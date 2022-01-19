@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load cart %}
+
+{% comment %} Show in Main Store Page  {% endcomment %}
+
+  <div class='m-5 row'>
+    <div class='col'>
+      <img src="{{menuitem.image.url}}" height="400" alt={{menuitem.food.name}}> 
+    </div> 
+    <div class='col'>
+      <p>{{menuitem.food.name}}</p>
+      <div>
+        {{menuitem.branch.restaurant.name}}
+        {{menuitem.branch.name}}
+        
+      </div><br>
+      <div>
+        {{menuitem.price}} $
+        
+      </div><br>
+      <div>
+        {{menuitem.description}}
+      </div>
+      <hr>
+    
+        <form action="/#{{menuitem.id}}" method="POST" class="btn-block">
+          {% csrf_token %}
+          <div class='m-5 row '>
+            
+              <div class='col'>
+
+                <input type='number'  name='quantity'  min="0" max={{menuitem.count}}
+                value={{request.session.cart|keyvalue:menuitem.id}}> 
+                
+              </div>
+
+              <div class='col'>
+                <input hidden type="text" name='product' value='{{menuitem.id}}'>
+                <input type="hidden" name='homepage' value='True'>
+                <input type="submit" class="col-md-2 float-right btn button-18 form-control"
+                value="Add To Cart"> 
+                <small>max order: {{menuitem.count}}</small>
+
+            </div> 
+
+            <div class='col mt-5'>
+              <a href="{% url 'restaurant_menu' menuitem.branch.id %}"
+                class="btn button-18"> 
+                   View Another Foods of this Restaurant
+              </a>         
+           </div> 
+
+          </div> 
+       </form>
+       
+      </div>
+      
+    
+   
+    
+  </div>
+
+
+{% endblock content %} 
+

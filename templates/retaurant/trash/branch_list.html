@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}All categories{% endblock %}
+{% block content %}
+
+
+<div id='foods_list' class='m-5'>
+<h3>  {{restaurant}} Branches</h3>
+{% for branch in branch_list %}
+<div class="row">
+    <div class="col-md-10" style="margin:0 auto;">
+        <div class="card container-fluid" style="margin-top: 1rem;">
+            <div class="card-body">
+              <h5 class="card-title">{{branch.name}}</h5> 
+              <p>{{branch.address}}</p>   
+              <a href="{% url 'restaurant_menu' branch.pk %}" class="btn btn-warning">Menu</a>
+              <a href="{% url 'branch_popular_foods' branch.pk %}" class="btn btn-warning">Popular Foods</a>
+              <a href="{% url 'branch_edit' branch.pk %}" class="btn btn-warning">Edit</a>
+              {% comment %} restaurant_branchs {% endcomment %}
+
+            </div>
+          </div>
+    </div>
+</div>
+{% endfor %}
+</div>
+{% endblock %}
+
+
+
+{% comment %} {% block javascript %}
+<script>
+    var CSRF_TOKEN = '{{ csrf_token }}';
+    var EMPTY_CATEGORY_URL = "{% url 'empty_categories' %}"
+    var POPULAR_CATEGORIES_URL = "{% url 'popular_categories' %}"
+</script>
+<script src={% static '/js/category.js' %}></script>
+{% endblock javascript %}  {% endcomment %}

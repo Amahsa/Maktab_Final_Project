@@ -1,15 +1,33 @@
 {% extends 'base.html' %}
 
-
+{% load crispy_forms_tags %}
 {% block content %}
 {% load cart %}
 {% load custom_filter %}
+
+{% for message in messages %}
+	<div class="container-fluid p-0" style="width:600px;">
+	<div class="alert {{ message.tags }} alert-dismissible" role="alert" >
+		<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+		<span aria-hidden="true">×</span>
+		</button>
+		{{ message }}
+	</div>
+	</div>
+{% endfor %}
+
+{% comment %} 
+<script>
+   alert('{{ message }}');
+</script> {% endcomment %}
+
+
 <div class="container">
    <div class="border rounded p-4 m-4">
-        <p class="display-4 pl-4 ml-4 btn btn-warning rounded-pill">Your Cart</p>
+        <p >Your Cart</p>
         <hr>
-        <table class="table">
-            <thead>
+        <table class="table" id='cart_item_table'>
+            <thead class='mb-2'>
                 <tr>
                     <th>Sno.</th>
                     <th>Image</th>
@@ -17,6 +35,8 @@
                     <th>Price</th>
                     <th>Quantity</th>
                     <th>Total</th>
+                    <th></th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -29,9 +49,27 @@
                     <td>{{product.price|currency}}</td>
                     <td>{{product|cart_quantity:request.session.cart}}</td>
                     <td>{{product|price_total:request.session.cart|currency}}</td>
-                    {% comment %} <td><button onclick="location.href='{% url 'delete cart item' pk=product.pk %}'
-                       class="btn btn-sm btn-danger delete-item" 
-                      data-item="{{product.pk}}"><i class="fa fa-trash"></i></button></td> {% endcomment %}
+                    
+                    <td>   
+                      <a href="{% url 'edit_cart_item' product.id %}"> 
+                      <i class="fa fa-edit" 
+                        style="color:gray; font-size:18px">
+                      </i> 
+                     </a>
+                    </td>
+
+
+
+                    <td>
+                      <a  href='/' class='delete-item'
+                       data-item="{{product.id}}">
+                        <i class="fa fa-trash" style="color:gray; font-size:18px" aria-hidden="true" ></i></a>
+
+                      </button>
+                    </td>
+
+                    <p id="values"></p>
+
                 </tr>
 
                 {% endfor %}
@@ -43,30 +81,35 @@
                     <th colspan="4"></th>
                     <th class="" colspan="">Total</th>
                     <th>{{products|total_cart_price:request.session.cart|currency}}</th>
-                </tr>
+                    
+                  </tr>
             </tfoot>
         </table>
         <hr>
 
-        {% if user.is_authenticated %}
-          <div class="m-3 p-3">
-              <a href="#" data-toggle="modal" data-target="#exampleModal" 
+        
+        {% if request.session.cart %}
+
+          {% if user.is_authenticated %}
+            <div class="m-3 p-3">
+                <a href="#" data-toggle="modal" data-target="#exampleModal" 
+                class="btn btn-outline-success border rounded  col-lg-3 float-right">
+                Check out</a>
+            </div>
+          {% else %}
+            <div class="m-3 p-3">
+              <a href="{% url 'account_login' %}"
               class="btn btn-outline-success border rounded  col-lg-3 float-right">
               Check out</a>
-          </div>
-        {% else %}
-          <div class="m-3 p-3">
-            <a href="{% url 'account_login' %}"
-            class="btn btn-outline-success border rounded  col-lg-3 float-right">
-            Check out</a>
-          </div>
-        {% endif %}
+            </div>
+          {% endif %}
+
         <form action="/#" class="col-2 " method="post">
           {% csrf_token %}
           <input hidden type="text" name='clean_cart' value='True'>
-          <input type="submit" value="Clean Cart" class="btn btn-block btn-success border-right">
+          <input type="submit" value="Clean Cart" class="button-170">
         </form>
-
+        {% endif %}
 
    </div>
 </div>
@@ -92,18 +135,61 @@
           <div class="m-2 p-3">
             <form action="/check-out" method="POST">
                 {% csrf_token %}
-                <div class="form-group">  <!-- ----------- here --------------- -->
-                  <label for="">Address</label>
-                  <input type="text" name="address" id="" class="form-control" placeholder="" aria-describedby="helpId">
-                  
-                </div>
-                <div class="form-group">
-                    <label for="">Phone</label>
-                    <input type="text" name="phone" id="" class="form-control" placeholder="" aria-describedby="helpId">
-                  </div>
 
-                  <input type="submit" class="btn float-right btn-outline-success col-lg-6" value="Check out">
+
+                <div class="form-group" id='address_list'>  <!-- ----------- here --------------- -->
+                  <label for="">Address</label>
+                  <select name="address_id" class="form-control" aria-describedby="helpId">
+                    {% for address in address_list %}
+                        <option value="{{ address.id }}">
+                          {{ address.state }}  {{ address.city }}  {{ address.full_address }}
+                        </option>
+                    {% endfor %}
+                    </select>
+                </div>
+
+                <input type="text" name='total_price' readonly value={{products|total_cart_price:request.session.cart}}>
+
+                <div class="m-5">
+                  <a href="#" data-toggle="modal" data-target="#AddAddressModal" 
+                  class=" m-2 btn button-170  float-right">
+                  add new address</a>              
+                
+                  
+                  <input type="submit" class="m-2 button-170 float-right col-lg-6" value="Check out">
+                </div>
             </form>
+          </div>
+        </div> <!-- modal-header -->
+        
+      </div>
+    </div>
+  </div>
+<!--==========================================================================-->
+  <!-- Modal -->
+  <div class="modal fade" id="AddAddressModal" tabindex="-1" 
+  role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header"> <!-- modal-header -->
+          <h5 class="modal-title" id="exampleModalLabel">
+              Add Address Form
+          </h5>
+          <hr>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="m-2 p-3">
+            <form id="add_new" method="post">
+              {% csrf_token %}
+              {{ form|crispy }}
+              <div class = "col text-center">
+                  <input type="submit" class="btn button-170 "
+                   value="Add New Address" />
+              </div>
+           </form>
           </div>
         </div> <!-- modal-header -->
         
@@ -112,4 +198,95 @@
   </div>
 
 
+
+
+
+
+
+
+
+
+  <div class="modal fade" id="EditCart" tabindex="-1" 
+  role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header"> <!-- modal-header -->
+          <h5 class="modal-title" id="exampleModalLabel">
+              Edit
+          </h5>
+          <hr>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="m-2 p-3">
+            <form action="/check-out" method="POST">
+                {% csrf_token %}
+                  <input type="submit" class="btn float-right btn-outline-success col-lg-6" value="Done">
+            </form>
+          </div>
+        </div> <!-- modal-header -->
+        
+      </div>
+    </div>
+  </div> 
+
 {% endblock %}
+
+
+{% block javascript %}
+<script>
+  console.log('adding new address')
+  $(document).ready(function () {
+      $("#add_new").submit(function (e) {
+        $('#AddAddressModal').modal().hide();
+          e.preventDefault();
+          // serialize the data for sending the form data.
+          var serializedData = $(this).serialize();
+          console.log('sssssssss',serializedData)
+          // make POST ajax call
+          $.ajax({
+              type: 'POST',
+              url: "{% url 'check_out_post_address' %}",
+              data: serializedData,
+              success: function (response) {
+                  $('#AddAddressModal').modal().hide();
+                  $("#add_new").trigger('reset');
+                  $('#AddAddressModal').modal('hide');
+                  $('#address_list').html(response.data)
+
+              },
+              error: function (response) {
+                  alert(response["responseJSON"]["error"]);
+              }
+          })
+      })
+      
+      $(".delete-item").click(function (e) {
+          e.preventDefault();
+          console.log(113333311)
+          var _Pid = $(this).attr('data-item');
+          console.log( _Pid)
+          $.ajax({
+            
+            url: "{% url 'delete_cart_item' %}",
+            data: {'pk':_Pid},
+            dataType:'json',
+            success: function (response) {
+                $('#cart_item_table').html(response.data)
+                console.log(response.data2)
+				        $('#cart_len').html(response.data2)
+
+
+            },
+            error: function (response) {
+                alert(response["responseJSON"]["error"]);
+            }
+        })
+
+        
+      })  
+  })
+</script>
+{% endblock javascript %}

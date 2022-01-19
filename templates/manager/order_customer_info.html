@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Customer info{% endblock %}
+{% block content %}
+
+
+{% comment %} Show In Manager Panel {% endcomment %}
+
+
+<div id='menu_item_list' class='m-5'>
+<h3 class='text-center m-4'> Customer info </h3>
+
+
+<table class="table">
+  <thead class='mb-2'>
+      <tr>
+          <th>First Name</th>
+          <th>Lsat Name</th>
+          <th>Phone Number</th>
+          <th>Email</th>
+      </tr>
+  </thead>
+  <tbody>
+      
+      <tr>       
+          <td>{{customer.first_name}}</td>
+          <td>{{customer.last_name}}</td>
+          <td>{{customer.phone_number}}</td>
+          <td>{{customer.email}}</td>
+                      
+      </tr>    
+  </tbody>
+
+</table>
+
+</div>
+{% endblock %}
+
+

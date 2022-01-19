@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load cart %}
+   
+  <div class='m-5 row'>
+    cart_menuitem_edit.html
+    <div class='col'>
+      <img src="{{menuitem.image.url}}" height="400"  width="400" alt={{menuitem.food.name}}> 
+    </div> 
+    <div class='col'>
+      <div>
+        {{menuitem.branch.restaurant.name}}
+        {{menuitem.branch.name}}
+      </div>
+      <div>
+        {{menuitem.price}}
+      </div>
+      <div>
+        {{menuitem.description}}
+      </div>
+      <hr>
+      
+        
+        <form action="/#{{menuitem.id}}" method="POST" class="btn-block">
+          {% csrf_token %}
+          <div class='m-5 row '>
+            
+            <div class='col'>
+              {% comment %} {{menuitem.id}}
+              {{request.session.cart.}}{{menuitem.id}} {% endcomment %}
+              <input type='number'  name='quantity'  min="0" max={{menuitem.count}}
+              value={{request.session.cart|keyvalue:menuitem.id}}> 
+              
+            </div>
+            <div class='col'>
+          <input hidden type="text" name='product' value='{{menuitem.id}}'>
+          {% comment %} <input hidden type="text" name='product' value='{{menuitem.id}}'> {% endcomment %}
+          <input type="submit" class="col-md-2 float-right btn button-18 form-control"
+              value="Update"> 
+              <input class=" btn button-18  btn-block" name='remover' value='True'>
+            </div> 
+            </div> 
+       </form>
+       
+      </div>
+      
+    
+   
+    
+  </div>
+
+ 
+{% endblock content %} 
+
+

@@ -1,0 +1,64 @@
+<h3 class='text-center m-4'>Orders List </h3>
+
+
+<table class="table">
+  <thead class='mb-2'>
+      <tr>
+          <th>Sno.</th>
+          <th>Customer</th>
+          <th>Phone Number</th>
+          <th>address</th>
+          <th>date</th>
+          <th>total price</th>
+          <th>status</th>
+          <th></th>
+          <th></th>
+          <th></th> 
+      </tr>
+  </thead>
+  <tbody>
+      
+    {% for order in order_list %}
+      <tr>
+          <td>{{forloop.counter}}</td>
+
+          <td>{{order.costumer.first_name}} {{order.costumer.last_name}}
+            <a href="{% url 'order_customer_info' order.costumer.pk %}">
+              <i class="fa fa-info-circle" aria-hidden="true" 
+              style="font-size:18px; color:gray;"></i>
+            </a>
+          </td>
+
+          <td>{{order.costumer.phone_number}}</td>
+
+          <td>{{order.address}}</td>
+          <td>{{order.created_at_jalali.date}} {{order.created_at_jalali.time}}</td>
+          <td>{{order.total_price}}</td>
+          <td>
+            {{order.status.status}}
+            
+          </td>
+          <td>
+            <a href="{% url 'manager_update_order_status' order.pk %}">
+            {% if order.status.status == 'ordered' %}
+            sent
+            {% elif order.status.status == 'sent' %}
+            delivered
+            {% endif %}
+            </a>
+
+          </td>
+          
+          <td>
+            <a href="{% url 'order_items' order.pk %}">
+              <i class="fa fa-info-circle" aria-hidden="true" style="font-size:18px; color:gray;"></i>
+            </a>
+          </td>
+      </tr>
+
+      {% endfor %}
+     
+  </tbody>
+
+  
+</table>

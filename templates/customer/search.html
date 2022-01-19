@@ -1,0 +1,108 @@
+{% load humanize %}
+{% load cart %}
+{% load custom_filter %}
+{% if products %}
+
+    <div class="row mb-5 text-center" style='text-align: center; margin: auto; width: 50%;' >  <!-- title -->
+        <h1 class="text-center" style='text-align: center;'>
+            {{category}}
+        </h1>
+    </div> <!-- title -->
+
+    <div class="row" > <!-- popular foods list -->
+        
+        
+        {% for product in products %}  <!--popular_food_list -->
+        <div class="card mx-auto mb-3 p-2" id={{product.id}} style="width: 14rem;">
+            
+            {% if product.image %}
+                <img class="card-img-top m-1" src="{{product.image.url}}" alt="">
+            {% endif %}
+
+            <div class="card-body">
+                <p style='font-size:16px' class="card-title">{{product.branch.restaurant.name}} {{product.branch.name}} </p>
+                <p style='font-size:13px'>{{product.food.name}}</p>
+                <p class="card-text"><b>{{product.price|intcomma|currency}}</b></p>
+            </div>
+
+            <div class="card-footer p-0 no-gutters">
+
+                {% if product|is_in_cart:request.session.cart %}
+                <div class="row no-gutters">
+                    
+                    <input type="hidden" name="next" value="{{ request.path }}">
+                    <a class=" btn button-18  btn-block" href="{% url 'add_menu_item_to_cart' product.id %}">
+                        {{product|cart_quantity:request.session.cart}} in Cart     
+                    </a>
+                    
+                </div>
+                {% elif  product.count == 0 %}
+                <div class='text-center'>
+                      <small style='color:orange; text-align:center;'> Not Exist </small>
+                </div>
+                      {% else %}
+                
+                <input type="hidden" name="next" value="{{ request.path }}">
+                <a class=" btn button-18  btn-block" href="{% url 'add_menu_item_to_cart' product.id %}">
+                    Add toCart      
+                </a>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+        {% endfor %}  
+    </div>  <!-- popular foods list -->
+    <hr>
+
+
+{% comment %}   
+       
+            <div  class="row mb-5 text-center" style='text-align: center; margin: auto; width: 50%;' >  <!-- title -->
+                <h1 class="text-center" style='text-align: center;'>
+                    {{category}}
+                </h1>
+            </div> <!-- title --><!-- title -->
+    
+    <div class="row mb-5 " > <!-- popular foods list -->
+        {% for product in products %}  <!--popular_food_list -->
+        <div class="card mx-auto mb-3" id='{{product.id}}' style="width: 14rem;">
+            
+            {% if product.image %}
+                <img class="card-img-top m-1" src="{{product.image.url}}" alt="Card image cap">
+            {% endif %}
+
+            <div class="card-body">
+                <p class="card-title">{{product.branch.restaurant.name}} {{product.branch.name}} </p>
+                <p>{{product.food.name}}</p>
+                <p class="card-text"><b>{{product.price|intcomma|currency}}</b></p>
+            </div>
+
+            <div class="card-footer p-0 no-gutters">
+
+                {% if product|is_in_cart:request.session.cart %}
+                <div class="row no-gutters">
+                    
+                    <input type="hidden" name="next" value="{{ request.path }}">
+                    <a class=" btn button-18  btn-block" href="{% url 'add_menu_item_to_cart' product.id %}">
+                        {{product|cart_quantity:request.session.cart}} in Cart     
+                    </a>
+                    
+                </div>
+                {% else %}
+                
+                <input type="hidden" name="next" value="{{ request.path }}">
+                <a class=" btn button-18  btn-block" href="{% url 'add_menu_item_to_cart' product.id %}">
+                    Add toCart      
+                </a>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+        {% endfor %}  
+    </div>  {% endcomment %}
+
+    {% endif %}   

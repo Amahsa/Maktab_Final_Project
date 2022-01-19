@@ -1,0 +1,282 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% load cart %}
+{% load custom_filter %}
+{% load humanize %}
+{% block title %}All categories{% endblock %}
+{% block content %}
+
+<div><h1 class='m-5 text-center'>{{branch.restaurant.name }} {{branch.name }}</h1></div>
+<div class="container-fluid mt-3">
+    <div class="row"> 
+        {% comment %} <div class="col-lg-3 mx-auto mt-5"> {% endcomment %}
+
+            {% comment %} <div class="list-group mb-2">
+                <h5 class="list-group-item list-group-item-action btn-outline-success"> Categories </h5>
+                <a  class="list-group-item list-group-item-action btn btn-outline-success">
+                    All Products</a>
+
+                {% for category in categories %}
+                <a 
+                    class="list-group-item list-group-item-action btn btn-outline-success ">
+                    {{category.name}}</a>
+
+                {% endfor %}
+                
+            </div> {% endcomment %}
+        {% comment %} </div>  {% endcomment %}
+        <div id='products' class="col-lg-9 mx-auto">
+            <div class="row mb-5 text-center" style='text-align: center;' >  <!-- title -->
+                
+               
+            </div> <!-- title -->
+
+
+            <div class="row mb-5 text-center" style='text-align: center;' >  <!-- title -->
+                {% for product in products %}
+                        <div class="card mx-auto mb-3 p-2" id={{product.id}} style="width: 18rem;">
+                            {% if product.image %}
+                            <img class="card-img-top m-1" src="{{product.image.url}}" alt="Card image cap">
+                            {% endif %}
+                            <div class="card-body">
+                                <p class="card-title">{{product.food.name}}</p>
+                                <p class="card-text"><b>{{product.price|intcomma|currency}}</b></p>
+                                <!-- {{product | is_in_cart:request.session.cart }} -->
+                            </div>
+
+                            <div class="card-footer p-0 no-gutters">
+
+                                {% if product|is_in_cart:request.session.cart %}
+                                <div class="row no-gutters">
+                                  
+                                    <input type="hidden" name="next" value="{{ request.path }}">
+                                    <a class=" btn button-18  btn-block" href="{% url 'menu_item_detail' product.id %}">
+                                        {{product|cart_quantity:request.session.cart}} in Cart     
+                                    </a>
+
+                                </div>
+                                {% elif  product.count == 0 %}
+                                <div class='text-center'>
+                                    <small style='color:orange; text-align:center;'> Not Exist </small>
+                                </div>
+                                {% else %}
+                                
+ 
+                                <form method="POST">
+                                    <input type="hidden" name="next" value="{{ request.path }}">
+                                    <a class=" btn button-18  btn-block" href="{% url 'menu_item_detail' product.id %}">
+                                        Add toCart      
+                                    </a>
+                                </form>
+
+
+                                {% endif %}
+
+                            </div>
+
+                        </div>
+                        {% endfor %}
+            </div>
+
+            <div class="row mb-5 text-center" style='text-align: center;' >  <!-- title -->
+                <h1 class="text-center" style='text-align: center;'>
+                    Popular Foods
+                </h1>
+            </div>
+
+            <div class="row mb-5 text-center" style='text-align: center;' >  <!-- title -->
+                {% for product in popular_foods %}
+                        <div class="card mx-auto mb-3 p-2" id={{product.id}} style="width: 18rem;">
+                            {% if product.image %}
+                            <img class="card-img-top m-1" src="{{product.image.url}}" alt="Card image cap">
+                            {% endif %}
+                            <div class="card-body">
+                                <p class="card-title">{{product.food.name}}</p>
+                                <p class="card-text"><b>{{product.price|intcomma|currency}}</b></p>
+                                <!-- {{product | is_in_cart:request.session.cart }} -->
+                            </div>
+
+                            <div class="card-footer p-0 no-gutters">
+
+                                {% if product|is_in_cart:request.session.cart %}
+                                <div class="row no-gutters">
+                                  
+                                    <input type="hidden" name="next" value="{{ request.path }}">
+                                    <a class=" btn button-18  btn-block" href="{% url 'menu_item_detail' product.id %}">
+                                        {{product|cart_quantity:request.session.cart}} in Cart     
+                                    </a>
+
+                                </div>
+                                {% elif  product.count == 0 %}
+                                <div class='text-center'>
+                                    <small style='color:orange; text-align:center;'> Not Exist </small>
+                                </div>
+                                {% else %}
+                                
+ 
+                                <form method="POST">
+                                    <input type="hidden" name="next" value="{{ request.path }}">
+                                    <a class=" btn button-18  btn-block" href="{% url 'menu_item_detail' product.id %}">
+                                        Add toCart      
+                                    </a>
+                                </form>
+
+
+                                {% endif %}
+
+                            </div>
+
+                        </div>
+                        {% endfor %}
+            </div>
+
+
+        </div>
+
+
+    </div>
+</div>
+
+{% comment %} 
+
+
+
+
+
+ <div class='m-3'>
+    <h1 class='m-5 text-center'>{{branch.restaurant.name }} {{branch.name }}</h1>
+    <div class="container-fluid mt-3">
+        <div class="row">
+
+<!-- filter ------------------------------------------------------------------------>
+           
+            <div class="col-lg-3 mx-auto">
+
+                <div class="list-group mb-2">
+                    <h5 class="list-group-item list-group-item-action btn-outline-success"> Categories </h5>
+                    <a  class="list-group-item list-group-item-action btn btn-outline-success">
+                        All Products</a>
+
+                    {% for category in categories %}
+                    <a 
+                        class="list-group-item list-group-item-action btn btn-outline-success ">
+                        {{category.name}}</a>
+
+                    {% endfor %}
+                    
+                </div>
+            </div> 
+
+<!------------------------------ filter ---------------------------------------------->
+
+<!----------------------------- all products ---------------------------------------->
+                <div id='products' class="col-lg-9 mx-auto">
+                    <div class="row mx-auto menu-div">
+                        {% for product in products %}
+                        <div class="card mx-auto mb-3 p-2" id={{product.id}} style="width: 18rem;">
+                            {% if product.image %}
+                            <img class="card-img-top m-1" src="{{product.image.url}}" alt="Card image cap">
+                            {% endif %}
+                            <div class="card-body">
+                                <p class="card-title">{{product.food.name}}</p>
+                                <p class="card-text"><b>{{product.price|intcomma|currency}}</b></p>
+                                <!-- {{product | is_in_cart:request.session.cart }} -->
+                            </div>
+
+                            <div class="card-footer p-0 no-gutters">
+
+                                {% if product|is_in_cart:request.session.cart %}
+                                <div class="row no-gutters">
+                                  
+                                    <input type="hidden" name="next" value="{{ request.path }}">
+                                    <a class=" btn button-18  btn-block" href="{% url 'menu_item_detail' product.id %}">
+                                        {{product|cart_quantity:request.session.cart}} in Cart     
+                                    </a>
+
+                                </div>
+                                {% elif  product.count == 0 %}
+                                <div class='text-center'>
+                                    <small style='color:orange; text-align:center;'> Not Exist </small>
+                                </div>
+                                {% else %}
+                                
+ 
+                                <form method="POST">
+                                    <input type="hidden" name="next" value="{{ request.path }}">
+                                    <a class=" btn button-18  btn-block" href="{% url 'menu_item_detail' product.id %}">
+                                        Add toCart      
+                                    </a>
+                                </form>
+
+
+                                {% endif %}
+
+                            </div>
+
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <div class="row mx-auto menu-div">
+                    
+
+                </div>
+            </div>
+                <hr>
+
+
+                
+
+
+
+
+
+        </div>
+    </div> 
+
+            <div>
+                <h1>Popular Foods</h1>
+                {% for popular_food  in  popular_foods %}
+                <div class="card mx-auto mb-3" id={{popular_food.id}} style="width: 18rem;">
+                    {% if popular_food.image %}
+                    <img class="card-img-top" src="{{popular_food.image.url}}" alt="Card image cap">
+                    {% endif %}
+                    <div class="card-body">
+                        <p class="card-title">{{popular_food.food.name}}</p>
+                        <p class="card-text"><b>{{popular_food.price|currency}}</b></p>
+                        <!-- {{product | is_in_cart:request.session.cart }} -->
+                    </div>
+
+                    <div class="card-footer p-0 no-gutters">
+
+                        {% if popular_food|is_in_cart:request.session.cart %}
+                        <div class="row no-gutters">
+                            <form action="/#{{popular_food.id}}" class="col-2 " method="post">
+                                {% csrf_token %}
+                                <input hidden type="text" name='product' value='{{product.id}}'>
+                                <input hidden type="text" name='remove' value='True'>
+                                <input type="submit" value=" - " class="btn btn-block btn-success border-right">
+                            </form>
+                            <div class="text-center col btn btn-success">{{popular_food|cart_quantity:request.session.cart}} in Cart</div>
+                            <form action="/#{{popular_food.id}}" class="col-2 " method="post">
+                                {% csrf_token %}
+                                <input hidden type="text" name='product' value='{{product.id}}'>
+                                <input type="submit" value=" + " class="btn btn-block btn-success border-left">
+                            </form>
+                        </div>
+                        {% else %}
+                        <form action="/#{{popular_food.id}}" method="POST" class="btn-block">
+                            {% csrf_token %}
+                            <input hidden type="text" name='product' value='{{product.id}}'>
+                            <input type="submit" class="float-right btn button-18 form-control"
+                                value="Add To Cart">
+                        </form>
+                        {% endif %}
+
+                    </div>
+
+                </div>
+                {% endfor %}
+            </div>
+ </div> {% endcomment %}
+{% endblock content %}

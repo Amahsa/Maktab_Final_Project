@@ -1,0 +1,114 @@
+<nav id='nav_bar' class="one-edge-shadow
+    navbar navbar-light
+    sticky-top navbar 
+    navbar-expand-lg
+    text-white">
+
+      <a class="navbar-brand ms-3 text-dark " href="/">
+      <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
+       integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" 
+      crossorigin="anonymous">
+
+      <img src="https://www.freepnglogos.com/uploads/shopping-cart-png/shopping-cart-svg-png-icon-download-28.png" 
+      style="width:50px;height:50px,color:text-light;">E-Food</a>
+
+
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto"> <!-- ul 0 -->
+
+          <li class="nav-item active">
+            <a class="nav-link" href="/store">Home <span class="sr-only">(current)</span></a>
+          </li>
+
+        </ul>
+
+        <ul class=" navbar-nav my-2 my-lg-0"> <!---- ul 1 ---->
+          {% if  user.is_customer or not user.is_authenticated %}
+          <li id='cart_len' class="nav-item active"> <!---- li 1 ---->
+            <a   class="nav-link" href="{% url 'cart' %}">Cart 
+              <span  class="badge badge-warning">{{request.session.cart.keys|length}}</span>
+              <span class="sr-only">(current)</span>
+            </a>
+          </li> <!---- li 1 ---->
+          {% endif %}
+          
+
+
+          {% comment %} {% if request.session.customer %} {% endcomment %}
+          {% if user.is_authenticated %}
+
+           {% if user.is_customer %}
+            <li class="nav-item active "> <!---- li 2 ---->
+              <a class="nav-link" href="/customer/orders">Orders<span class="sr-only">(current)</span></a>
+            </li> <!---- li 2 ---->
+          {% endif %}
+          <li class="nav-item active "> <!---- li 3 ---->
+            <a class="nav-link" href="/logout">Logout<span class="sr-only">(current)</span></a>
+          </li> <!---- li 3 ---->
+          
+          {% else %}
+        
+          <li class="nav-item active"> <!---- li 4 ---->
+            <a class="nav-link" href="{% url 'signup' %}">Signup
+              <span class="sr-only">(current)</span>
+            </a>
+          </li> <!---- li 4 ---->
+
+          <li class="nav-item active"> <!---- li 5 ---->
+            <a class="nav-link" href="{% url 'account_login' %}">Login
+              <span class="sr-only">(current)</span>
+            </a>
+          </li> <!---- li 5 ---->
+
+          
+           
+          
+          {% endif %}
+
+        </ul> <!---- ul 1-- -->
+
+
+      </div>
+            
+            {% if user.is_authenticated %} 
+            {% comment %} {{ user.username }} {% endcomment %}
+            <span class="nav-item dropdown mr-5"> <!--span 1 -->
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                {{ user.first_name }} {{ user.last_name }}
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                {% if user.is_customer %} 
+                <a class="dropdown-item" href="{% url 'customer_edit_info' %}">Change Info</a>
+                <div class="dropdown-divider"></div>
+                {% endif %}
+
+                {% if user.is_restaurant_manager %} 
+                <a class="dropdown-item" href="{% url 'manager_edit_page' %}">Change Info</a>
+                <div class="dropdown-divider"></div>
+                {% endif %}
+
+
+                
+                
+                <a class="dropdown-item" href="{% url 'account_change_password'%}">Change Password</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="{% url 'account_logout' %}">Log Out</a>
+
+
+              </div>
+            </span> <!--span 1 -->
+
+            {% else %} 
+              <a class="nav-link disabled" style="color:gray;">Disabled</a>
+            {% endif %}
+          </ul> <!-- ul 0 -->
+          
+        </div>
+      </div>
+    </nav>

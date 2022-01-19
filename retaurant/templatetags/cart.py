@@ -36,5 +36,9 @@ def total_cart_price(products, cart):
         sum += price_total (p, cart)
     return sum
 
+@register.filter
+def keyvalue(dict, key):  
+    return dict.get(str(key))
+
 
 

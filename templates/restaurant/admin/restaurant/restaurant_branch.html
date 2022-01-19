@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}All Restaurants{% endblock %}
+{% block content %}
+
+
+
+<div id='restaurant_branches_list' class='m-5'>
+  <h3 class='text-center mb-5' >{{branch.restaurant.name}}   {{branch.name}} </h3>
+  
+  
+  <table class="table">
+    <thead class='mb-2'>
+        <tr>
+            <th>Name</th>
+            <th>Address</th>
+            <th>Category</th>
+            <th>Manager</th> 
+            <th></th>       
+            <th></th>       
+            <th></th>        
+        </tr>
+    </thead>
+    <tbody>
+        
+        <tr>
+            <td>{{branch.name}}</td>
+            <td>{{branch.address}}</td>
+            <td>{{branch.category}}</td>
+            <td>{{branch.manager.first_name}} {{branch.manager.last_name}}</td>
+            <td>
+              
+              <a href="{% url 'restaurant_branch_menu' branch.pk %}"> 
+                <i class='fas fa-hamburger' style="color:gray; font-size:24px"></i>
+              </a>
+            </td>
+            <td>
+              <a href="{% url 'restaurant_branch_edit' branch.pk %}" >
+              <i class="fa fa-edit" style="color:gray; font-size:24px"></i>
+            </td>
+            <td>
+              <a href="{% url 'restaurant_branch_delete' branch.id %}" >
+                <i class="fa fa-trash" aria-hidden="true" style="color:gray; font-size:18px"></i>
+              </a>
+  
+            </td>
+            
+        </tr>
+  
+       
+    </tbody>
+  
+    
+  </table>
+
+
+
+
+{% endblock %}

@@ -7,31 +7,33 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from ..decorators import site_admin_required
 
+
+@method_decorator([login_required, site_admin_required], name='dispatch')
 class FoodList(ListView):
     model = Food
-
 
 @method_decorator([login_required, site_admin_required], name='dispatch')
 class AddFoodView(CreateView):
     form_class = AddFoodForm
     success_url = reverse_lazy('foods_list')
-    template_name = 'retaurant/add_food.html'
+    template_name = 'manager/add_food.html'
 
 @method_decorator([login_required, site_admin_required], name='dispatch')
 class FoodDetailView(DetailView):
     model = Food
-    template_name = 'retaurant/food_detail.html'
+    template_name = 'manager/food_detail.html'
 
 @method_decorator([login_required, site_admin_required], name='dispatch')
 class FoodUpdateView(UpdateView):
     model = Food
-    template_name = 'retaurant/food_edit.html'
-    fields = ['name', 'meal', 'category']
+    template_name = 'manager/food_edit.html'
+    fields = ['name','category','meal']
+    success_url = reverse_lazy('foods_list')
 
 @method_decorator([login_required, site_admin_required], name='dispatch')
 class FoodDeleteView(DeleteView):
     model = Food
-    template_name = 'retaurant/food_delete.html'
+    template_name = 'manager/food_delete.html'
     success_url = reverse_lazy('foods_list')
 
 

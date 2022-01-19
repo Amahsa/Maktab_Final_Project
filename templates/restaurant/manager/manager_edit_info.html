@@ -1,0 +1,178 @@
+{% extends 'base.html' %}
+{%  load static %}
+{% block content %}
+{% load crispy_forms_tags %}
+
+
+
+<div id='personal_info' class='m-5'>
+<p>Personal Info</p>
+<table class="table" id='cart_item_table'>
+    <thead class='mb-2'>
+        <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Phone Number</th>
+            <th>Email</th>
+
+            <th></th>
+
+        </tr>
+    </thead>
+    <tbody>
+
+        <tr>
+            <td>{{manager.first_name}}</td>
+            <td>{{manager.last_name}}</td>
+            <td>{{manager.phone_number}}</td>
+            <td>{{manager.email}}</td>
+                     
+            <td>   
+              <a href={% url 'manager_update_info' manager.pk %}> 
+              <i class="fa fa-edit" 
+                style="color:gray; font-size:18px">
+              </i> 
+             </a>
+            </td>
+
+        </tr>
+ 
+    </tbody>
+
+</table>
+
+
+
+
+
+
+
+
+<div class='mt-5'>
+<p>Branch Info</p>
+<table class="table" id='cart_item_table'>
+    <thead class='mb-2'>
+        <tr>
+            <th>Branch Name</th>
+            <th>State</th>
+            <th>City</th>
+            <th>Full Address</th>
+            <th></th>
+
+        </tr>
+    </thead>
+    <tbody>
+
+        <tr>
+            <td>{{branch.name}}
+                <a class='mx-3' href={% url 'manager_update_branch' branch.id %}> 
+                    <i class="fa fa-edit" 
+                      style="color:gray; font-size:18px">
+                    </i> 
+                   </a>
+            </td>
+            <td>{{branch.address.state}}</td>
+            <td>{{branch.address.city}}</td>
+            <td>{{branch.address.full_address}}</td>
+                     
+            <td>   
+              <a href={% url 'manager_update_address' branch.address.id %}> 
+              <i class="fa fa-edit" 
+                style="color:gray; font-size:18px">
+              </i> 
+             </a>
+            </td>
+
+        </tr>
+ 
+    </tbody>
+
+</table>
+</div>
+
+
+
+
+
+
+</div>
+
+
+
+
+{% comment %} 
+
+
+<div id='address_list' class='m-5'>
+    <p>Addresses</p>
+    <table class="table" id='cart_item_table'>
+        <thead class='mb-2'>
+            <tr>
+                <th>Sno.</th>
+                <th>State</th>
+                <th>City</th>
+                <th>Full Address</th>
+    
+                <th></th>
+                <th></th>
+    
+            </tr>
+        </thead>
+        <tbody>
+            {% for address  in address_list %}
+                <tr>
+                    <td>{{forloop.counter}}</td>
+                    <td>{{address.state}}</td>
+                    <td>{{address.city}}</td>
+                    <td>{{address.full_address}}</td>
+                    
+                    <td>   
+                    <a href={% url 'customer_update_form' customer.pk %}> 
+                    <i class="fa fa-edit" 
+                        style="color:gray; font-size:18px">
+                    </i> 
+                    </a>
+                    </td>
+
+                    <td>
+                        <a href='/' class='delete-address mt-4'
+                            data-item="{{address.id}}" data-customer-id="{{values.id}}">
+                            <i class="fa fa-trash" style="color:gray; font-size:18px"
+                                aria-hidden="true" >
+                             </i>
+                        </a>
+                    </td>
+        
+                </tr>
+            
+            
+            {% endfor %}
+            
+     
+        </tbody>
+    
+    </table>
+    </div> {% endcomment %}
+
+    
+{% comment %} 
+    <div class=' m-5'>
+        <hr>
+        <p>Add new Address</p>
+        <div class=' d-flex justify-content-center'>
+           
+            <form id="add_neww" method="post" class='col-lg-4'>
+                {% csrf_token %}
+                {{ form|crispy }}
+                <div class = "col text-center">
+                    <input type="submit" class="btn button-170" 
+                    style="color:gray; font-size:36px" value="+" />
+                </div>
+            </form>
+        </div>
+    </div> {% endcomment %}
+
+{% endblock %}
+
+
+

@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class='m-5'> 
+  <h1>Delete Food</h1>
+  <form action="" method="post">{% csrf_token %}
+    <p>Are you sure you want to delete "{{ food.name }}"?</p>
+    <input type="submit" value="Confirm">
+  </form>
+</div>
+{% endblock content %}

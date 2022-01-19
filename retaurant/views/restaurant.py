@@ -2,23 +2,39 @@ from django.http.request import HttpRequest
 from django.http.response import HttpResponse
 from django.shortcuts import render
 from ..models import Branch, Restaurant,OrderItem,Order,Food,MenuItem
-from django.views.generic import DetailView,ListView,DeleteView
+from django.views.generic import DetailView,ListView,DeleteView,UpdateView
 from django.db.models import Avg,Sum,Max,Min,Count
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from ..decorators import site_admin_required
-
+# -------------------------------------------------
+@method_decorator([login_required, site_admin_required], name='dispatch')
 class RestaurantList(ListView):
     model = Restaurant
 
+
+# -------------------------------------------------
 @method_decorator([login_required, site_admin_required], name='dispatch')
 class RestaurantDeleteView(DeleteView):
     model = Restaurant
     success_url = reverse_lazy('restaurant_list')
-    template_name = 'retaurant/delete_restaurant.html'
-
-
+    template_name = 'manager/delete_restaurant.html'
+# -------------------------------------------------
+@method_decorator([login_required, site_admin_required], name='dispatch')
+class RestaurantUpdateView(UpdateView):
+    model = Restaurant
+    template_name = 'manager/restaurant_edit.html'
+    fields = ['name',]
+    success_url = reverse_lazy('restaurants_list')
+# -------------------------------------------------
+@method_decorator([login_required, site_admin_required], name='dispatch')
+class BranchUpdateView(UpdateView):
+    model = Branch
+    template_name = 'manager/branch_edit.html'
+    fields = ['name','address','category']
+    success_url = reverse_lazy('branch_list')
+# -------------------------------------------------
 def restaurant_branches(request,pk):
     obj = Restaurant.objects.get(pk=pk)
     
@@ -26,7 +42,7 @@ def restaurant_branches(request,pk):
         "restaurant" : obj.name,
         "branch_list" : obj.branchs.all(),
     }
-    return render(request,'retaurant/branch_list.html',context=mydictionary)
+    return render(request,'manager/branch_list.html',context=mydictionary)
 
 
 # -------------------------------------------------
@@ -71,6 +87,24 @@ def test_popular_restaurants(req):
     return render(req,'retaurant/popular_branch_list.html',context={'branch_list':branchs})
 
 #-------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # def popular_foods(request):
 

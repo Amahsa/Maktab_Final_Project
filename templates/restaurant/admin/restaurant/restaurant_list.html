@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}All Restaurants{% endblock %}
+{% block content %}
+
+{% comment %} <div id='foods_list' class='m-5'>
+<h3> all restaurants </h3>
+{% for restaurant in restaurant_list %}
+<div class="row">
+    <div class="col-md-10" style="margin:0 auto;">
+        <div class="card container-fluid" style="margin-top: 1rem;">
+            <div class="card-body">
+              <h5 class="card-title">{{restaurant.name}}</h5> 
+
+              <a href="{% url 'restaurant_branchs' restaurant.pk %}" class="btn button-170">branchs</a>
+              <a href="{% url 'delete_restaurant' restaurant.pk %}" class="btn button-170">Remove</a>
+              <a href="{% url 'restaurant_edit' restaurant.pk %}" class="btn button-128">Edit</a>
+
+            </div>
+          </div>
+    </div>
+</div>
+{% endfor %}
+</div> {% endcomment %}
+
+
+<div id='restaurant_list' class='m-5'>
+  <h3 class='text-center mb-5' > All Restaurants </h3>
+  
+  
+  <table class="table">
+    <thead class='mb-2'>
+        <tr>
+            <th>Sno.</th>
+            <th>Name</th>
+            <th>Branches</th>
+            <th></th>
+            <th></th>
+            <th></th>
+            
+            
+        </tr>
+    </thead>
+    <tbody>
+        
+      {% for restaurant in restaurant_list %}
+        <tr>
+            <td>{{forloop.counter}}</td>
+            <td>{{restaurant.name}}</td>
+            <td>
+              <apan>
+                {% for branch in  restaurant.branchs.all %} 
+                <a href="{% url 'restaurant_branch' branch.id %}">
+                {{branch}} 
+                </a>
+                 <br>
+                {%endfor%}
+                
+              </apan>
+            </td>
+
+            <td>
+             
+              <a href="{% url 'delete_restaurant' restaurant.id %}" >
+                <i class="fa fa-trash" aria-hidden="true" style="color:gray; font-size:18px"></i>
+              </a>
+              
+               <a href="{% url 'restaurant_edit' restaurant.id %}" class=" m-1">
+                <i class="fa fa-edit" aria-hidden="true" style="color:gray; font-size:18px"></i>
+               </a>  
+  
+            </td>
+            
+        </tr>
+  
+        {% endfor %}
+       
+    </tbody>
+  
+    
+  </table>
+
+
+
+
+{% endblock %}

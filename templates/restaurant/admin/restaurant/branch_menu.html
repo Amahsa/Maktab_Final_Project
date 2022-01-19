@@ -1,0 +1,136 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}All categories{% endblock %}
+{% block content %}
+
+<div class='m-5'>
+  {% comment %} <a href="{% url 'add_menu_item' %}" class="button-200 text-decoration-none">Add New Menu Item</a> {% endcomment %}
+  {% comment %} <a href="{% url 'add_category' %}" class="button-170">Add Category</a> {% endcomment %}
+  {% comment %} <a href="{% url 'add_meal' %}" class="button-170">Add Meal</a> {% endcomment %}
+</div>
+<div id='menu_item_list' class='m-5'>
+<h3 class='text-center m-4'> All Foods </h3>
+
+
+<table class="table">
+  <thead class='mb-2'>
+      <tr>
+          <th>Image</th>
+          <th>Name</th>
+          <th>Meal</th>
+          <th>Category</th>
+          <th>Description</th>
+          <th>Price</th>
+          <th>Quantity</th>
+          <th></th>
+
+
+          <th></th>
+          
+          
+      </tr>
+  </thead>
+  <tbody>
+      
+    {% for food in food_list %}
+      <tr>
+          <td>{% if food.image %}
+            <img src="{{food.image.url}}" height="100" alt='XXXXX'></td>
+            {% endif %}
+          <td><p>{{food.food.name}}</p> </td>
+                
+          <td>
+            <apan>
+              {% for meal in  food.food.meal.values_list %} 
+              {{meal.1}}  <br>
+              {%endfor%}
+              
+            </apan>
+          </td>
+          <td>
+            <span>
+              {% for category in  food.food.category.values_list %} 
+              {{category.1}}  <br>
+              {%endfor%}
+            </apan>
+          </td>
+          <td>{{food.description}}</td>
+          <td><p>{{food.price}}</p> </td>
+          <td><p>{{food.count}}</p> </td>
+
+          <td><a href="{% url 'edit_menu_item' food.pk %}"><i class="fa fa-edit" 
+            style="color:gray; font-size:18px"></i></a></td>
+          <td><a href="{% url 'delete_menu_item' food.pk %}"><i class="fa fa-trash"
+             aria-hidden="true" style="color:gray; font-size:18px"></i></a></td>
+    
+      </tr>
+
+      {% endfor %}
+     
+  </tbody>
+
+  
+</table>
+
+
+
+
+
+
+
+
+
+{% comment %} 
+
+{% for food in food_list %}
+<div class="row">
+    <div class="col-md-10" style="margin:0 auto;">
+        <div class="card container-fluid" style="margin-top: 1rem;">
+            <div class="card-body">
+              <h5 class="card-title">{{food.name}}</h5> 
+              <div>
+                وعده های غذایی :
+                {% for meal in  food.meal.values_list %} 
+                {{meal.1}}  
+                {%endfor%}
+              </div>
+              <div>
+                دسته بندی ها :
+                {% for category in  food.category.values_list %} 
+                {{category.1}}  
+                {%endfor%}
+              </div>
+              
+              <div class='m-1'>
+                <a href="{% url 'food_detail' food.id %}" class="button-170">Details</a>       
+                <a href="{% url 'food_edit' food.id %}" class="button-170">Edit</a>
+                <a href="{% url 'delete_food' food.id %}" class="button-170">Remove</a>
+              </div>
+
+            </div>
+          </div>
+    </div>
+</div>
+{% endfor %} {% endcomment %}
+
+  {% comment %} <ul class="list-group pr-0">
+    {% for food in food_list %}
+    <li class="list-group-item d-flex justify-content-between">
+      <h5 class="card-title">{{food.name}}</h5>
+      <i class="fas fa-times text-danger mr-auto delete-item"></i>
+    </li>
+    {% endfor %}
+  </ul> {% endcomment %}
+</div>
+{% endblock %}
+
+
+
+{% comment %} {% block javascript %}
+<script>
+    var CSRF_TOKEN = '{{ csrf_token }}';
+    var EMPTY_CATEGORY_URL = "{% url 'empty_categories' %}"
+    var POPULAR_CATEGORIES_URL = "{% url 'popular_categories' %}"
+</script>
+<script src={% static '/js/category.js' %}></script>
+{% endblock javascript %}  {% endcomment %}

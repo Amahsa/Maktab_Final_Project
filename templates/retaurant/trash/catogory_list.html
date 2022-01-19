@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}All categories{% endblock %}
+{% block content %}
+
+  <div id='foods_list' class='m-5'>
+  <h3> all Categories </h3>
+  {% for category in category_list %}
+  <div class="row">
+      <div class="col-md-10" style="margin:0 auto;">
+          <div class="card container-fluid" style="margin-top: 1rem;">
+              <div class="card-body">
+                <h5 class="card-title">{{category.name}}</h5>   
+                <a href="{% url 'delete_category' category.id %}" class="btn btn-danger">Delete</a>           
+                <a href="{% url 'category_edit' category.id %}" class="btn button-170">Edit</a>
+
+              </div>
+            </div>
+      </div>
+  </div>
+  {% endfor %}
+  </div>
+{% endblock %}

@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% block content %}
+
+{% comment %} Show in Manager Panel  {% endcomment %}
+
+
+<div class="container mt-4">  
+    <div class="p-3 m-3">
+        <div class="col-lg-5 rounded mx-auto border pt-4">
+                        
+            <form action={% url 'add_menu_item' %} method="POST" enctype='multipart/form-data'>
+                
+                {% csrf_token %}
+
+                {% if error%}
+                <div class="alert alert-danger" role="alert">
+                    {{error}}
+                </div>
+                {% endif %}
+
+              
+
+                <div class="form-group">
+                    <label for="">Food Name</label>
+                    <select name="food" class="form-control" aria-describedby="helpId">
+                        {% for food in food_list %}
+                            <option value="{{ food.id }}">
+                            {{ food.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+
+                <!-- description -->
+                <div class="form-group">
+                    <label for="">description</label>
+                    <input type="text" name="description" 
+                    id="" value="{{values.description}}" class="form-control form-control-sm"
+                    >
+                </div>
+
+                <!-- image -->
+                <div class="form-group">
+                    <label for="">image</label>
+                    <input type="file" name="image" 
+                    id="" class="form-control form-control-sm"
+                    value="{{values.image}}"
+                    accept="image/*"
+                    
+                    >
+                </div>
+                <!-- price -->
+                <div class="form-group">
+                    <label for="">price</label>
+                    <input required type="number" name="price" id=""
+                    value="{{values.price}}" 
+                    class=" form-control-sm form-control">
+                </div>
+
+                <div class="form-group">
+                    <label for="">quantity</label>
+                    <input required type="number" min='0' name="count" id=""
+                    value="{{values.count}}" 
+                    class=" form-control-sm form-control">
+                </div>
+
+                
+        
+                <hr>
+                <div class='text-center mb-2' >
+                <button type="submit" class="btn btn-sm button-17 col-lg-12 ">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

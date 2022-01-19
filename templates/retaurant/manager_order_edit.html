@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}  
+<div class ='m-5'>
+  <form method="post"> 
+    {% csrf_token %} 
+    {{ form|crispy }} 
+    <input type="hidden" name="next" value="{{ request.path }}">
+    <input type="submit" value="Save"> 
+  </form>
+</div>
+{% endblock content %}

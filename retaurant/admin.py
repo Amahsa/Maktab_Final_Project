@@ -9,19 +9,18 @@ class RestaurantAdmin(admin.ModelAdmin):
     list_display = ['name','test']
     inlines = [Branchs]
 
-    @admin.display(description='branchs')
+    @admin.display(description='branches')
     def test(self,object):
         return '|'.join([item.name for item in object.branchs.all()])
 
-
-
-
 admin.site.register(Category)
-
 
 admin.site.register(Status)
 
-admin.site.register(Food)
+@admin.register(Food)
+class FoodAdmin(admin.ModelAdmin):
+    list_display = ['name' , 'created_at_jalali']
+
 admin.site.register(Meal)
 
 class OrderItemss(admin.TabularInline):
@@ -50,7 +49,8 @@ class MenuItemAdmin(admin.ModelAdmin):
     
 @admin.register(OrderItem)
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ['order','order_count', 'food']
+    list_display = ['order','order_count', 'food' ]
 
 class MenuItems(admin.TabularInline):
     model = MenuItem
+

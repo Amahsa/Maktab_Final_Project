@@ -1,0 +1,152 @@
+{% load cart %}
+{% load custom_filter %}
+{% load humanize %}
+<!-- body -->
+
+
+<div class="container-fluid mt-3">
+    <div class="row"> 
+
+
+        <div class="col-lg-2 mx-auto" >     <!-- filters -->
+
+            <div class="list-group mb-2" style='margin-top:135px;'>
+                <h5 class="list-group-item list-group-item-action btn-outline-warning" 
+                style='font-size: 15px; background-color: orange; color:white;'>
+                 Categories </h5>
+
+                <a data-item="all"  style='font-size: 15px;'
+                class="category list-group-item list-group-item-action btn btn-outline-warning">
+                All Foods</a>
+                
+                <a data-item="BestSeller" style='font-size: 15px;'
+                class="category list-group-item list-group-item-action btn btn-outline-warning">
+                Best Seller Foods</a>
+
+                {% for category in categories %}
+                <a data-item="{{category.id}}" style='font-size: 15px;'
+                 {% comment %} href="/?category={{category.id}} " {% endcomment %}
+                 class="category list-group-item list-group-item-action btn btn-outline-warning ">
+                 {{category.name}}</a>
+
+                {% endfor %}
+                
+            </div>
+            <h5 class="list-group-item list-group-item-action btn-outline-warning" style='font-size: 15px; background-color: orange; color:white;'> 
+                Restaurants </h5>
+            <div class="list-group ">
+                {% for branch in branchs %}
+                <a href="{% url 'restaurant_menu' branch.id %}" style='font-size: 15px;'
+                class="list-group-item list-group-item-action btn btn-outline-warning "> 
+                    {{branch.restaurant.name}} {{branch.name}}
+                </a>   
+                {% endfor %}
+            </div>
+            
+
+        </div>        <!-- filters -->
+        
+
+        <div class="col-lg-10 mx-auto" >    <!-- id='products' products -->
+
+
+            <div class="row mb-3 p-2" id='result'> <!-- popular foods list -->
+                
+                
+            </div>  <!-- popular foods list -->
+
+
+
+
+
+        <div id='products'>
+            <div class="row mb-5 text-center" style='text-align: center; margin: auto; width: 50%;' >  <!-- title -->
+                <h1 class="text-center" style='text-align: center;'>
+                    {{category}}
+                </h1>
+            </div> <!-- title -->
+
+            <div class="row" > <!-- popular foods list -->
+                
+                
+                {% for product in products %}  <!--popular_food_list -->
+                <div class="card mx-auto mb-3 p-2" id={{product.id}} style="width: 14rem;">
+                    
+                    {% if product.image %}
+                        <img class="card-img-top m-1" src="{{product.image.url}}" alt="">
+                    {% endif %}
+
+                    <div class="card-body">
+                        <p style='font-size:16px' class="card-title">{{product.branch.restaurant.name}} {{product.branch.name}} </p>
+                        <p style='font-size:13px'>{{product.food.name}}</p>
+                        <p class="card-text"><b>{{product.price|intcomma|currency}}</b></p>
+                    </div>
+
+                    <div class="card-footer p-0 no-gutters">
+
+                        {% if product|is_in_cart:request.session.cart %}
+                        <div class="row no-gutters">
+                            
+                            <input type="hidden" name="next" value="{{ request.path }}">
+                            <a class=" btn button-18  btn-block" href="{% url 'add_menu_item_to_cart' product.id %}">
+                                {{product|cart_quantity:request.session.cart}} in Cart     
+                            </a>
+                            
+                        </div>
+                        {% elif  product.count == 0 %}
+                        <div class='text-center'>
+                              <small style='color:orange; text-align:center;'> Not Exist </small>
+                        </div>
+                              {% else %}
+                        
+                        <input type="hidden" name="next" value="{{ request.path }}">
+                        <a class=" btn button-18  btn-block" href="{% url 'add_menu_item_to_cart' product.id %}">
+                            Add toCart      
+                        </a>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+                {% endfor %}  
+            </div>  <!-- popular foods list -->
+            <hr>
+        </div>
+            <div class="row m-5"> <!-- title -->
+                Best Seller Restaurants
+            </div> <!-- title -->
+
+            <div class="row"> <!-- popular restaurants list -->
+                {% for branch in popular_branch_list %}  <!--popular_food_list -->
+                <div class="card mx-auto mb-3 p-2 col-3" id={{restaurant.id}} style="width: 18rem;">
+                    
+                    <div class="card-body">
+                        <p class="card-title">{{branch.restaurant.name}} {{branch.name}} </p>
+                    </div>
+                    <a class=" btn button-18  btn-block" href="{% url 'restaurant_menu' branch.id %}">
+                        Menu     
+                    </a>
+
+                </div>
+                {% endfor %} 
+            </div> <!-- popular restaurants list -->
+
+            <hr>
+            <div class="row"> <!-- title -->
+            </div> <!-- title -->
+
+            <div class="row"> <!-- popular restaurants list -->
+                
+            </div> <!-- popular restaurants list -->
+
+
+        </div>    <!-- priducts -->
+
+
+    </div>
+</div>
+
+
+<hr>
+

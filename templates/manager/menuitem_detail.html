@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load cart %}
+{% load humanize %}
+
+{% comment %} For Store Page After Enter To a Restaurant Page{% endcomment %}
+
+
+  <div class='m-5 row'>
+    <div class='col'>
+      <img src="{{menuitem.image.url}}" height="400"  width="400" alt={{menuitem.food.name}}> 
+    </div> 
+    <div class='col'>
+      <p>{{menuitem.food.name}}</p>
+      <div>
+        {{menuitem.branch.restaurant.name}}
+        {{menuitem.branch.name}}
+        
+      </div><br>
+      <div>
+        {{menuitem.price|intcomma}} $ 
+        
+      </div><br>
+      <div>
+        {{menuitem.description}}
+      </div>
+      <hr>
+      
+
+        
+        <form action="/#{{menuitem.id}}" method="POST" class="btn-block">
+          {% csrf_token %}
+          <div class='m-5 row '>
+            
+            <div class='col'>
+
+              <input type='number'  name='quantity'  min="0" max={{menuitem.count}}
+              value={{request.session.cart|keyvalue:menuitem.id}}>
+              <small>max order:{{menuitem.count}}</small> 
+              
+            </div>
+            <div class='col'>
+          <input hidden type="text" name='product' value='{{menuitem.id}}'>
+          <input type="hidden" name='branch_id' value='{{menuitem.branch.id}}'>
+          <input type="submit" class="col-md-2 float-right btn button-18 form-control"
+              value="Add To Cart"> 
+            </div> 
+            </div> 
+       </form>
+       
+      </div>
+      
+    
+   
+    
+  </div>
+
+{% endblock content %} 
+
+

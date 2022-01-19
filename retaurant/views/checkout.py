@@ -1,44 +1,45 @@
 from django.shortcuts import render, redirect
-
-from django.contrib.auth.hashers import check_password
-from accounts.models import Customer
+from accounts.models import Customer,CustomUser,Address,CustomerAddress
 from django.views import View
 
-from models import MenuItem
-from models import Order,OrderItem
-
+from ..models import MenuItem,OrderItem,Order,Status
+from django.contrib import messages
 
 class CheckOut(View):
+
     def post(self, request):
 
-        address = request.POST.get('address') # 
-        # address = request.POST.get('address')
+        address = CustomerAddress.objects.get(pk=request.POST.get('address_id'))
 
-        phone = request.POST.get('phone')
+        customer = request.user
+        cart = request.session.get('cart')
+        total_price=request.POST.get('total_price')
 
-        customer = request.session.get('customer')#
-        # customer = request.session.get('customer')
+        products = MenuItem.get_products_by_id(list(cart.keys()))
 
-        cart = request.session.get('cart') #
-        # cart = request.session.get('cart')
-
-        products = MenuItem.get_products_by_id(list(cart.keys()))#
-        # products = Products.get_products_by_id(list(cart.keys()))
         print(address, customer, cart, products)
-
+        order = Order(
+                     costumer= Customer.objects.get(pk=customer.id),
+                    #   costumer = customer,
+                      address = address,
+                      status = Status.objects.get(pk=2),
+                      total_price= total_price
+        )
+        order.save()
         for product in products:
-            print(cart.get(str(product.id)))
+            new_quantity = product.count - cart.get(str(product.id))
+            MenuItem.objects.filter(pk=product.id).update(count=new_quantity)
             order_item = OrderItem(
-                        #   customer=Customer(id=customer),
-                        #   address=address,
-                          
-                          food=product,
-                        #   price=product.price,
-                          
-                        #   phone=phone,
-                          order_count=cart.get(str(product.id))
-                          )
+                   order=order,
+                   food = product,
+                   order_count =  cart.get(str(product.id)),
+            )
             order_item.save()
+            
+ 
         request.session['cart'] = {}
+
+
+        messages.success(request, 'Ordered Successfully')
 
         return redirect('cart')

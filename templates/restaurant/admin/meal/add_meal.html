@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block title %}All categories{% endblock %}
+{% block content %}
+
+<div class='m-5'>
+  <h2>Add Meal</h2>
+  <form method="post"  class='m-5'>
+    {% csrf_token %}
+    {{ form|crispy }}
+    <button type="submit">Submit</button>
+  </form>
+</div>
+{% endblock content %}

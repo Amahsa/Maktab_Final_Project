@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Branch orders{% endblock %}
+{% block content %}
+<div class'container'>
+<div class='m-5 row'>
+  
+  <div class='col-md '>
+    <a id='all_orders' class="button-170 text-decoration-none mx-1">All Orders</a>
+
+  </div>
+  <div class='col-md '>
+    <a  id='ordered_orders' class="button-170 text-decoration-none mx-1">On Ordered Orders</a>
+
+  </div>
+  <div class='col-md '>
+    <a id='sent_orders'  class="button-170 text-decoration-none mx-1">Sent Orders</a>
+
+  </div>
+  <div class='col-md '>
+      <a  id='delivered_orders'  class="button-170 text-decoration-none mx-1">delivered Orders</a>
+
+  </div>
+  <div class='col-md '>
+      <a id='orders_date_sort'  class="button-170 text-decoration-none mx-1">Sort by Date</a>
+
+  </div>
+
+</div> 
+</div>
+<div id='order_list' class='m-5'>
+<h3 class='text-center m-4'>Orders List </h3>
+
+
+<table class="table">
+  <thead class='mb-2'>
+      <tr>
+          <th>Sno.</th>
+          <th>Customer</th>
+          <th>Phone Number</th>
+          <th>address</th>
+          <th>date</th>
+          <th>total price</th>
+          <th>status</th>
+          <th></th>
+          <th></th>
+          <th></th> 
+      </tr>
+  </thead>
+  <tbody>
+      
+    {% for order in order_list %}
+      <tr>
+          <td>{{forloop.counter}}</td>
+
+          <td>{{order.costumer.first_name}} {{order.costumer.last_name}}
+            <a href="{% url 'order_customer_info' order.costumer.pk %}">
+              <i class="fa fa-info-circle" aria-hidden="true" 
+              style="font-size:18px; color:gray;"></i>
+            </a>
+          </td>
+
+          <td>{{order.costumer.phone_number}}</td>
+
+          <td>{{order.address}}</td>
+          <td>{{order.created_at_jalali.date}} {{order.created_at_jalali.time}}</td>
+          <td>{{order.total_price}}</td>
+          <td>
+            {{order.status.status}}
+            
+          </td>
+          <td>
+            <a href="{% url 'manager_update_order_status' order.pk %}">
+            {% if order.status.status == 'ordered' %}
+            sent
+            {% elif order.status.status == 'sent' %}
+            delivered
+            {% endif %}
+            </a>
+
+          </td>
+          
+          <td>
+            <a href="{% url 'order_items' order.pk %}">
+              <i class="fa fa-info-circle" aria-hidden="true" style="font-size:18px; color:gray;"></i>
+            </a>
+          </td>
+      </tr>
+
+      {% endfor %}
+     
+  </tbody>
+
+  
+</table>
+
+</div>
+{% endblock %}
+
+
+
+{% block javascript %}
+<script>
+    var CSRF_TOKEN = '{{ csrf_token }}';
+    var ALL_ORORDERS = "{% url 'branch_orders' %}"
+</script>
+<script src={% static '/js/branch_orders.js' %}></script>
+{% endblock javascript %} 

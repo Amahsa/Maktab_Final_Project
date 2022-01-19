@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}All customers{% endblock %}
+{% block content %}
+
+<div id='customer_list' class='m-5'>
+<h3 class='text-center mb-5' > All Customers </h3>
+
+
+<table class="table">
+  <thead class='mb-2'>
+      <tr>
+          <th>Sno.</th>
+          <th>First Name</th>
+          <th>Last Name</th>
+          <th>Email</th>
+          <th>Addresses</th>
+          <th>order count</th>
+          <th></th>
+          <th></th>
+          <th></th>
+          
+          
+      </tr>
+  </thead>
+  <tbody>
+      
+    {% for customer in customer_list %}
+      <tr>
+          <td>{{forloop.counter}}</td>
+          <td>{{customer.first_name}}</td>
+          <td>{{customer.last_name}}</td>
+          <td>{{customer.email}}</td>
+          <td>
+            <apan>
+              {% for address in  customer.customer_addresses.all %} 
+              {{address}}  <br>
+              {%endfor%}
+              
+            </apan>
+          </td>
+          <td>
+            <span>
+              {{customer.customer_orders.all.count }}
+            </apan>
+          </td>
+          <td>
+           <a href="{% url 'customer_detail' customer.id %}" class=" m-1">
+              <i class="fa fa-info-circle" aria-hidden="true" style="font-size:18px; color:gray;"></i>
+            </a>       
+          
+            <a href="{% url 'delete_customer' customer.id %}" >
+              <i class="fa fa-trash" aria-hidden="true" style="color:gray; font-size:18px"></i>
+            </a>
+            
+             <a href="{% url 'edit_customer' customer.id %}" class=" m-1">
+              <i class="fa fa-edit" aria-hidden="true" style="color:gray; font-size:18px"></i>
+             </a> 
+
+          </td>
+          
+      </tr>
+
+      {% endfor %}
+     
+  </tbody>
+
+  
+</table>
+
+
+
+
+
+
+
+
+
+{% comment %} 
+
+{% for food in food_list %}
+<div class="row">
+    <div class="col-md-10" style="margin:0 auto;">
+        <div class="card container-fluid" style="margin-top: 1rem;">
+            <div class="card-body">
+              <h5 class="card-title">{{food.name}}</h5> 
+              <div>
+                وعده های غذایی :
+                {% for meal in  food.meal.values_list %} 
+                {{meal.1}}  
+                {%endfor%}
+              </div>
+              <div>
+                دسته بندی ها :
+                {% for category in  food.category.values_list %} 
+                {{category.1}}  
+                {%endfor%}
+              </div>
+              
+              <div class='m-1'>
+                <a href="{% url 'food_detail' food.id %}" class="button-170">Details</a>       
+                <a href="{% url 'food_edit' food.id %}" class="button-170">Edit</a>
+                <a href="{% url 'delete_food' food.id %}" class="button-170">Remove</a>
+              </div>
+
+            </div>
+          </div>
+    </div>
+</div>
+{% endfor %} {% endcomment %}
+
+  {% comment %} <ul class="list-group pr-0">
+    {% for food in food_list %}
+    <li class="list-group-item d-flex justify-content-between">
+      <h5 class="card-title">{{food.name}}</h5>
+      <i class="fas fa-times text-danger mr-auto delete-item"></i>
+    </li>
+    {% endfor %}
+  </ul> {% endcomment %}
+</div>
+{% endblock %}
+
+
+
+{% comment %} {% block javascript %}
+<script>
+    var CSRF_TOKEN = '{{ csrf_token }}';
+    var EMPTY_CATEGORY_URL = "{% url 'empty_categories' %}"
+    var POPULAR_CATEGORIES_URL = "{% url 'popular_categories' %}"
+</script>
+<script src={% static '/js/category.js' %}></script>
+{% endblock javascript %}  {% endcomment %}

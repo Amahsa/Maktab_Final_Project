@@ -1,0 +1,43 @@
+{% load static %}
+{% load cart %}
+{% load custom_filter %}
+
+
+<p>Your Orders</p>
+<hr>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Sno.</th>
+            <th>Date</th> 
+            <th>Address</th>  
+            <th>Total Price</th>
+            <th>Status</th>
+            <th>Info</th>
+        </tr>
+    </thead>
+    <tbody>
+        
+        {% for order in order_list %}
+        <tr>
+            <td>{{forloop.counter}}</td>
+            
+            <td>{{order.created_at_jalali.date}} {{order.created_at_jalali.time}}</td>
+            <td>{{order.address}}</td>
+            <td>{{order.total_price|currency}}</td>
+                <td>
+                    <small >{{order.status.status}}</small>
+
+            </td>
+            <td>
+                <a href="{% url 'customer_order_items' order.pk %}" class=" m-1">
+                    <i class="fa fa-info-circle" aria-hidden="true" style="font-size:18px; color:gray;"></i>
+                </a>  
+            </td>
+        </tr>
+        
+        {% endfor %}
+        
+    </tbody>
+
+</table>

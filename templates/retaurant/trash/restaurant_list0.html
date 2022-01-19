@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}All Restaurants{% endblock %}
+{% block content %}
+
+{% comment %} Show In Admin Panel {% endcomment %}
+
+
+<div id='foods_list' class='m-5'>
+<h3> all restaurants </h3>
+{% for restaurant in restaurant_list %}
+<div class="row">
+    <div class="col-md-10" style="margin:0 auto;">
+        <div class="card container-fluid" style="margin-top: 1rem;">
+            <div class="card-body">
+              <h5 class="card-title">{{restaurant.name}}</h5> 
+
+              <a href="{% url 'restaurant_branchs' restaurant.pk %}" class="btn button-170">branchs</a>
+              <a href="{% url 'delete_restaurant' restaurant.pk %}" class="btn button-170">Remove</a>
+              <a href="{% url 'restaurant_edit' restaurant.pk %}" class="btn button-128">Edit</a>
+
+            </div>
+          </div>
+    </div>
+</div>
+{% endfor %}
+</div>
+{% endblock %}

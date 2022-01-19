@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block title %}All categories{% endblock %}
+{% block content %}
+
+<div class='m-5'>
+  <h2>Add Meal</h2>
+  <form method="post"  class='m-5'>
+    {% csrf_token %}
+    {% comment %} {{ form.as_p }} {% endcomment %}
+    {{ form|crispy }}
+    <button type="submit">Submit</button>
+  </form>
+</div>
+{% endblock content %}
+
+
+
+
+{% comment %} {% block javascript %}
+<script>
+    var CSRF_TOKEN = '{{ csrf_token }}';
+    var EMPTY_CATEGORY_URL = "{% url 'empty_categories' %}"
+    var POPULAR_CATEGORIES_URL = "{% url 'popular_categories' %}"
+</script>
+<script src={% static '/js/category.js' %}></script>
+{% endblock javascript %}  {% endcomment %}

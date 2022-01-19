@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}All categories{% endblock %}
+{% block content %}
+
+    <div id='category_list' class='m-5'>
+      
+      <a href="{% url 'add_category' %}" 
+      class="btn button-170 mt-5 m-5">Add Category</a> 
+
+      <h3 class='text-center mb-5'> All Categories </h3>
+
+      <table class="table">
+        <thead class='mb-2'>
+            <tr>
+                <th>Name</th>
+                <th></th>       
+                <th></th>       
+                <th></th>        
+            </tr>
+        </thead>
+        <tbody>
+          {% for categry in category_list %}
+            <tr>
+                <td>{{categry.name}}</td>
+                 <td>
+                  <a href="{% url 'category_edit' categry.pk %}" >
+                  <i class="fa fa-edit" style="color:gray; font-size:24px"></i>
+                </td>
+                
+                <td>
+                  <a href="{% url 'delete_category' categry.id %}" >
+                    <i class="fa fa-trash" aria-hidden="true" style="color:gray; font-size:18px"></i>
+                  </a>
+                </td> 
+            </tr>
+            {% endfor %}
+          
+        </tbody>
+      
+      </table>
+
+    </div>
+
+  </div>
+{% endblock %}

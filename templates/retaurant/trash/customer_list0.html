@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}All categories{% endblock %}
+{% block content %}
+
+<div id='foods_list' class='m-5'>
+<h3> all Customers </h3>
+{% for customer in customer_list %}
+<div class="row">
+    <div class="col-md-10" style="margin:0 auto;">
+        <div class="card container-fluid" style="margin-top: 1rem;">
+            <div class="card-body">
+              <h5 class="card-title">{{customer.email}}</h5> 
+              Addresses :
+              {% for address in  customer.address.values_list %} 
+              {{address.1}} ,  {{address.2}} , {{address.3}}  
+              {%endfor%}
+              <br> <br> 
+              <a href="{% url 'delete_customer' customer.pk %}" class="btn btn-danger">Delete</a>
+              <a href="{% url 'customers_orders' customer.pk %}" class="btn btn-info">Orders</a>
+
+            </div>
+          </div>
+    </div>
+</div>
+{% endfor %}
+</div>
+{% endblock %}
